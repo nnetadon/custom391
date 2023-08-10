@@ -724,3 +724,7 @@ function closepage() {
 const disabledKeys=["u","I","J","ctrl","shift","i","j","ctrl+shift+i","ctrl+shift+j"];const showAlert=e=>{e.preventDefault();return alert("Упс, вы не можете просматривать код сайта таким способом!");}
 document.addEventListener("contextmenu",e=>{showAlert(e);});document.addEventListener("keydown",e=>{if(e.ctrlKey&&disabledKeys.includes(e.key)||e.key==="F12"){showAlert(e);}});
 /*/////////////////////////////////////////////////////*/
+console.log('%c Discord: ', 'color: white; background-color: #2274A5', '7859.');
+console.log('%c vk.com: ', 'color: white; background-color: #95B46A', 'https://vk.com/k1ss_lyak');
+console.log('%c Авторский доступ: ', 'color: white; background-color: #D33F49', 'Данный материал используется исключительно в личностных целях.');
+document.addEventListener('load', ()=>document.querySelectorAll('.product__price').forEach(elem=>parseInt(elem.innerText) == 0 ? elem.innerText = 'БЕСПЛАТНО' : ''), true);
