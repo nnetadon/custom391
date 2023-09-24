@@ -15069,7 +15069,7 @@ const Rw = async () => {
     children: Q.jsxs(Hg, {
         className: "footer",
         children: [Q.jsx("img", {
-            src: "https://sun9-80.userapi.com/impg/709pOCufAMDstABtxntv2TP1OEfEGxq43iYzIQ/1FU-cYI0RyQ.jpg?size=1080x1080&quality=95&sign=e52e868d7ceec8be9036aa051133a1fc&type=album",
+            src: "",
             alt: "Dream Rust Label",
             className: "navbar-brand"
         }), Q.jsx("a", {
@@ -15771,7 +15771,7 @@ const uC = e => t => {
                         as: Ch,
                         to: "/app/store",
                         children: Q.jsx("img", {
-                            src: "https://gspics.org/images/2023/05/03/0PZJlT.png",
+                            src: "https://media.discordapp.net/attachments/1150426224531886081/1155578804866138213/1FU-cYI0RyQ.png",
                             alt: "Dream Rust Label",
                             className: "navbar-brand p-0 m-0"
                         })
@@ -17953,13 +17953,13 @@ const Gx = new(Tx.default = Kx.default)({
                     children: [Q.jsx(xg.Item, {
                         children: Q.jsx("img", {
                             className: "d-block",
-                            src: "https://gspics.org/images/2023/05/13/0RtqFy.jpg",
+                            src: "https://tenor.com/view/end-credits-larry-david-gif-15995928",
                             alt: "First slide"
                         })
                     }), Q.jsx(xg.Item, {
                         children: Q.jsx("img", {
                             className: "d-block",
-                            src: "https://gspics.org/images/2023/04/25/0PnKoN.jpg",
+                            src: "https://tenor.com/view/end-credits-larry-david-gif-15995928",
                             alt: "Second slide"
                         })
                     })]
