@@ -14979,7 +14979,7 @@ Ew.Axios = bw, Ew.CanceledError = nw, Ew.CancelToken = Cw, Ew.isCancel = tw, Ew.
     return Rb.isObject(e) && !0 === e.isAxiosError
 }, Ew.mergeConfig = fw, Ew.AxiosHeaders = Yb, Ew.formToJSON = e => Hb(Rb.isHTMLForm(e) ? new FormData(e) : e), Ew.HttpStatusCode = Sw, Ew.default = Ew;
 const _w = Ew.create({
-    baseURL: "https://asdfasdgasdgsdf.gamestores.app/files/stores/backend",
+    baseURL: "https://redbear.online/files/stores/backend",
     withCredentials: !0
 });
 _w.interceptors.request.use((e => e)), _w.interceptors.response.use((e => (e.status, e)));
@@ -15077,11 +15077,11 @@ const Rw = async () => {
             className: "footer__link",
             children: "Контакты"
         }), Q.jsx("a", {
-            href: "https://asdfasdgasdgsdf.gamestores.app/agreement",
+            href: "https://redbear.online/agreement",
             className: "footer__link",
             children: "Пользовательское соглашение"
         }), Q.jsx("a", {
-            href: "https://asdfasdgasdgsdf.gamestores.app/privacy",
+            href: "https://redbear.online/privacy",
             className: "footer__link",
             children: "Политика конфиденциальности"
         }), Q.jsxs("div", {
@@ -15812,7 +15812,7 @@ const uC = e => t => {
                             children: Q.jsxs("a", {
                                 role: "button",
                                 className: "btn__login",
-                                href: "https://asdfasdgasdgsdf.gamestores.app/files/stores/backend/steam.php?login",
+                                href: "https://redbear.online/files/stores/backend/steam.php?login",
                                 children: [jC, "Войти через Steam"]
                             })
                         })]
