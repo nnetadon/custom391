@@ -15069,7 +15069,7 @@ const Rw = async () => {
     children: Q.jsxs(Hg, {
         className: "footer",
         children: [Q.jsx("img", {
-            src: "",
+            src: "https://media.discordapp.net/attachments/1091332390900748480/1112092337661820939/umbrella.png",
             alt: "Dream Rust Label",
             className: "navbar-brand"
         }), Q.jsx("a", {
@@ -15771,7 +15771,7 @@ const uC = e => t => {
                         as: Ch,
                         to: "/app/store",
                         children: Q.jsx("img", {
-                            src: "https://media.discordapp.net/attachments/1150426224531886081/1155578804866138213/1FU-cYI0RyQ.png",
+                            src: "https://media.discordapp.net/attachments/1091332390900748480/1112092337661820939/umbrella.png",
                             alt: "Dream Rust Label",
                             className: "navbar-brand p-0 m-0"
                         })
@@ -17953,13 +17953,13 @@ const Gx = new(Tx.default = Kx.default)({
                     children: [Q.jsx(xg.Item, {
                         children: Q.jsx("img", {
                             className: "d-block",
-                            src: "https://tenor.com/view/end-credits-larry-david-gif-15995928",
+                            src: "https://cdn.discordapp.com/attachments/1129399985163735131/1139218935607197717/banner_3.jpg",
                             alt: "First slide"
                         })
                     }), Q.jsx(xg.Item, {
                         children: Q.jsx("img", {
                             className: "d-block",
-                            src: "https://tenor.com/view/end-credits-larry-david-gif-15995928",
+                            src: "https://cdn.discordapp.com/attachments/1129399985163735131/1139218935607197717/banner_3.jpg",
                             alt: "Second slide"
                         })
                     })]
