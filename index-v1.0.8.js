@@ -17441,7 +17441,7 @@ const Gx = new(Tx.default = Kx.default)({
                     className: "dashboard__top",
                     children: [Q.jsx(rS, {})]
 					// Отвечает за слайдер с привелегиями
-					
+					/*
 				Object.values(e).map(((e, n) => e ? Q.jsx("div", {
                         className: "dashboard__top__item",
                         style: {
@@ -17455,7 +17455,7 @@ const Gx = new(Tx.default = Kx.default)({
                     }, n) : Q.jsx("div", {
                         className: "dashboard__top__item skeleton"
                     }, n)))	
-				
+				*.
 					
                 })
             }), Q.jsxs("div", {
