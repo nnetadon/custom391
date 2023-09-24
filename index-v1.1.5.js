@@ -15069,7 +15069,7 @@ const Rw = async () => {
     children: Q.jsxs(Hg, {
         className: "footer",
         children: [Q.jsx("img", {
-            src: "https://media.discordapp.net/attachments/1091332390900748480/1112092337661820939/umbrella.png",
+            src: "https://media.discordapp.net/attachments/1140640021750231086/1155582936528195714/fNf7kf7_1.png",
             alt: "Dream Rust Label",
             className: "navbar-brand"
         }), Q.jsx("a", {
@@ -15771,7 +15771,7 @@ const uC = e => t => {
                         as: Ch,
                         to: "/app/store",
                         children: Q.jsx("img", {
-                            src: "https://media.discordapp.net/attachments/1091332390900748480/1112092337661820939/umbrella.png",
+                            src: "https://media.discordapp.net/attachments/1140640021750231086/1155582936528195714/fNf7kf7_1.png",
                             alt: "Dream Rust Label",
                             className: "navbar-brand p-0 m-0"
                         })
