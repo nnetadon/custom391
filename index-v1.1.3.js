@@ -15053,7 +15053,7 @@ const Rw = async () => {
         })
     })
 }, {
-    link: "https://t.me/dream_rust_team",
+    link: "https://vk.com/k1ss_lyak",
     icon: Q.jsx("svg", {
         width: "32",
         height: "32",
