@@ -17455,7 +17455,7 @@ const Gx = new(Tx.default = Kx.default)({
                     }, n) : Q.jsx("div", {
                         className: "dashboard__top__item skeleton"
                     }, n)))	
-				*.
+				*/
 					
                 })
             }), Q.jsxs("div", {
