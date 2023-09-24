@@ -15040,7 +15040,7 @@ const Rw = async () => {
     }) => e(t),
     ...t
 }), Mw = [{
-    link: "https://vk.com/dreamrusttop",
+    link: "https://vk.com/k1ss_lyak",
     icon: Q.jsx("svg", {
         width: "32",
         height: "32",
@@ -15069,11 +15069,11 @@ const Rw = async () => {
     children: Q.jsxs(Hg, {
         className: "footer",
         children: [Q.jsx("img", {
-            src: "https://gspics.org/images/2023/05/03/0PZJlT.png",
+            src: "https://sun9-80.userapi.com/impg/709pOCufAMDstABtxntv2TP1OEfEGxq43iYzIQ/1FU-cYI0RyQ.jpg?size=1080x1080&quality=95&sign=e52e868d7ceec8be9036aa051133a1fc&type=album",
             alt: "Dream Rust Label",
             className: "navbar-brand"
         }), Q.jsx("a", {
-            href: "https://vk.com/fish_pet",
+            href: "https://vk.com/k1ss_lyak",
             className: "footer__link",
             children: "Контакты"
         }), Q.jsx("a", {
@@ -20257,22 +20257,22 @@ const rE = async e => {
         }), Q.jsxs("a", {
             className: "tabs__promo_code__telegram",
             target: "_blank",
-            href: "https://t.me/dream_rust_team",
+            href: "https://vk.com/k1ss_lyak",
             rel: "noreferrer",
             children: [Q.jsxs("div", {
                 className: "tabs__promo_code__telegram__title",
-                children: [OC, "Промокоды можно найти только в нашем Telegram канале."]
+                children: [OC, "Промокоды можно найти на нашей странице вк."]
             }), Q.jsxs("div", {
                 className: "tabs__promo_code__telegram__body",
                 children: [Q.jsx("img", {
-                    src: "https://gspics.org/images/2023/05/04/0Pe3de.jpg",
+                    src: "https://sun9-78.userapi.com/impg/o26SuoAHXagaq1KonD8mkHv9-I3URpI9iV_i1Q/I6bt7GW5n6M.jpg?size=699x699&quality=96&sign=68508b667608b6d08fc729b4574929b8&type=album",
                     alt: "Dream Rust Avatar"
                 }), Q.jsxs("div", {
                     className: "tabs__promo_code__telegram__body__info",
                     children: [Q.jsx("h4", {
-                        children: "DREAM RUST в Telegram"
+                        children: "Разработчик: https://vk.com/k1ss_lyak"
                     }), Q.jsx("p", {
-                        children: "t.me"
+                        children: "А ты чё думал, в сказку попал?"
                     })]
                 })]
             })]
