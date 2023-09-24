@@ -20227,7 +20227,7 @@ const rE = async e => {
         children: [Q.jsxs("div", {
             className: "tabs__promo_code__action",
             children: [Q.jsx(Tw, {
-                placeholder: "DREAMRUSTTOP",
+                placeholder: "https://vk.com/k1ss_lyak",
                 value: e,
                 onChange: e => {
                     t(e)
