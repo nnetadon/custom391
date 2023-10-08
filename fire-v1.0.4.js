@@ -845,31 +845,6 @@ function OvhUrlOverrite() {
     }
 }
 
-function obtainShopSteamId() {
-    if (CustomerSteamId != "0" && CustomerSteamId != "") {
-        return;
-    }
-    var xmlHttp = new XMLHttpRequest();
-
-    if (xmlHttp != null) {
-        xmlHttp.open("GET", "/api/index.php?modules=users&action=getData", true);
-        xmlHttp.send(null);
-    }
-    xmlHttp.onload = function(gjson) {
-        var gjson = JSON.parse(xmlHttp.response);
-        console.log(gjson);
-        var preSteam = gjson.data.steamID;
-        OvhPayUrl = "https://pay.moscow.ovh/?" + gjson.data.pay;
-        if (preSteam > 76561100000000000 || !isNaN(preSteam)) {
-            CustomerSteamId = preSteam.toString();
-            OvhUrlOverrite();
-        } else {
-            console.log("error obtainShopSteamId! " + gjson);
-        }
-    }
-
-}
-
 function OpenOplata() {
     OpenPay('Oplata');
 }
