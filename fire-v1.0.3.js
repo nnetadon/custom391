@@ -1,3 +1,4 @@
+window.location.hostname = "7859.gamestores.app"
 /*function fetchdata() {
 
 fetch(`${window.location.origin}/files/stores/backend/store.info.php`, {
