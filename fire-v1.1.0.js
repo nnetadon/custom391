@@ -85,7 +85,7 @@ curcontent["rules"] = {
 <p><li>4.5 ЗАПРЕЩЕНО строить отели.</li></p>\
 <p><li>Нарушение данного правила наказывается баном: (1- ый раз 3 ДНЯ, 2-ой раз 7 ДНЕЙ и т.д.)</li></p>\
 <p><li>Любые совместные действия будут наказываться!</li></p>\<br>\
-</ul><div class="unban" style="background: #333; border-radius: 10px; padding: 20px;"><p class="MsoNormal2" style="font-weight: bold; margin-bottom: 5px;">Возможность разблокировки</p><span>Заявку на разблокировку аккаунта можно подать через года после бана, если вы получили бан по причине читы, макросы и в некоторых случаях игра с читером. Подать заявку можно в свободной форме в <a href="vk.com/rust.fire" target="_blank" rel="noopener noreferrer">группу ВК</a></span></div></div></div>'
+</ul><div class="unban" style="background: #333; border-radius: 10px; padding: 20px;"><p class="MsoNormal2" style="font-weight: bold; margin-bottom: 5px;">Возможность разблокировки</p><span>Заявку на разблокировку аккаунта можно подать через года после бана, если вы получили бан по причине читы, макросы и в некоторых случаях игра с читером. Подать заявку можно в свободной форме в <a href="https://vk.com/rust.fire" target="_blank" rel="noopener noreferrer">группу ВК</a></span></div></div></div>'
 };
 
 curcontent["kit-vip"] = {
