@@ -85,7 +85,7 @@ curcontent["rules"] = {
 <p><li>4.5 ЗАПРЕЩЕНО строить отели.</li></p>\
 <p><li>Нарушение данного правила наказывается баном: (1- ый раз 3 ДНЯ, 2-ой раз 7 ДНЕЙ и т.д.)</li></p>\
 <p><li>Любые совместные действия будут наказываться!</li></p>\<br>\
-</ul><div class="unban" style="background: #333; border-radius: 10px; padding: 20px;"><p class="MsoNormal2" style="font-weight: bold; margin-bottom: 5px;">Возможность разблокировки</p><span>Заявку на разблокировку аккаунта можно подать через года после бана, если вы получили бан по причине читы, макросы и в некоторых случаях игра с читером. Подать заявку можно в свободной форме в <a href="группу ВК">https://vk.com/rust.fire/</a></span></div></div></div>'
+</ul><div class="unban" style="background: #333; border-radius: 10px; padding: 20px;"><p class="MsoNormal2" style="font-weight: bold; margin-bottom: 5px;">Возможность разблокировки</p><span>Заявку на разблокировку аккаунта можно подать через года после бана, если вы получили бан по причине читы, макросы и в некоторых случаях игра с читером. Подать заявку можно в свободной форме в группу ВК<a href="https://vk.com/rust.fire">https://vk.com/rust.fire/</a></span></div></div></div>'
 };
 
 curcontent["kit-vip"] = {
@@ -166,7 +166,7 @@ curcontent["block"] = {
 
 };
 
-var BlockListArrays = [['shotgun.double', 'pistol.revolver', 'ammo.shotgun'], ['pistol.semiauto', 'pistol.python', 'shotgun.pump', 'shotgun.spas12', 'coffeecan.helmet', 'roadsign.gloves', 'roadsign.jacket', 'roadsign.kilt'], ['pistol.prototype17', 'pistol.m92', 'smg.2', 'smg.thompson', 'grenade.molotov'], ['rifle.semiauto', 'rifle.m39', 'smg.mp5', 'metal.plate.torso.icevest', 'metal.plate.torso', 'metal.facemask', 'metal.facemask.hockey', 'ammo.rifle.incendiary'], ['rifle.ak', 'rifle.ak.ice', 'rifle.ak.diver', 'rifle.lr300', 'rifle.ak.ice', 'grenade.beancan'], ['heavy.plate.jacket', 'heavy.plate.pants', 'heavy.plate.helmet'], ['rifle.bolt', 'lmg.m249', 'hmlmg', 'rifle.l96', 'ammo.rifle.explosive', 'explosive.satchel'], ['multiplegrenadelauncher', 'homingmissile.launcher', 'rocket.launcher', 'explosive.timed', 'ammo.grenadelauncher.buckshot', 'ammo.rocket.smoke', 'ammo.grenadelauncher.he', 'ammo.rocket.fire', 'ammo.rocket.hv', 'ammo.rocket.basic', 'ammo.rocket.seeker', 'ammo.rocket.mlrs', 'submarine.torpedo.straight']];
+var BlockListArrays = [['shotgun.double', 'pistol.revolver', 'ammo.shotgun'], ['pistol.semiauto', 'pistol.python', 'shotgun.pump', 'shotgun.spas12', 'coffeecan.helmet', 'roadsign.gloves', 'roadsign.jacket', 'roadsign.kilt'], ['pistol.prototype17', 'pistol.m92', 'smg.2', 'smg.thompson', 'grenade.molotov'], ['rifle.semiauto', 'rifle.m39', 'smg.mp5', 'metal.plate.torso.icevest', 'metal.plate.torso', 'metal.facemask', 'metal.facemask.hockey', 'ammo.rifle.incendiary'], ['rifle.ak', 'rifle.ak.ice', 'rifle.ak.diver', 'rifle.lr300', 'grenade.beancan'], ['heavy.plate.jacket', 'heavy.plate.pants', 'heavy.plate.helmet'], ['rifle.bolt', 'lmg.m249', 'hmlmg', 'rifle.l96', 'ammo.rifle.explosive', 'explosive.satchel'], ['multiplegrenadelauncher', 'homingmissile.launcher', 'rocket.launcher', 'explosive.timed', 'ammo.grenadelauncher.buckshot', 'ammo.rocket.smoke', 'ammo.grenadelauncher.he', 'ammo.rocket.fire', 'ammo.rocket.hv', 'ammo.rocket.basic', 'ammo.rocket.seeker', 'ammo.rocket.mlrs', 'submarine.torpedo.straight']];
 
 //#endregion
 curcontent["Oplata"] = {
