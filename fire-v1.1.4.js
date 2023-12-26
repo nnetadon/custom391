@@ -1,4 +1,3 @@
-window.location.hostname = "shop.rust-fire.ru"
 var curcontent = new Array();
 curcontent["rules"] = {
     xhead: 'Правила',
@@ -137,25 +136,6 @@ curcontent["block"] = {
 
 var BlockListArrays = [['shotgun.double', 'pistol.revolver', 'ammo.shotgun'], ['pistol.semiauto', 'pistol.python', 'shotgun.pump', 'shotgun.spas12', 'coffeecan.helmet', 'roadsign.gloves', 'roadsign.jacket', 'roadsign.kilt'], ['pistol.prototype17', 'pistol.m92', 'smg.2', 'smg.thompson', 'grenade.molotov'], ['rifle.semiauto', 'rifle.m39', 'smg.mp5', 'metal.plate.torso.icevest', 'metal.plate.torso', 'metal.facemask', 'metal.facemask.hockey', 'ammo.rifle.incendiary'], ['rifle.ak', 'rifle.ak.ice', 'rifle.ak.diver', 'rifle.lr300', 'grenade.beancan'], ['heavy.plate.jacket', 'heavy.plate.pants', 'heavy.plate.helmet'], ['rifle.bolt', 'lmg.m249', 'hmlmg', 'rifle.l96', 'ammo.rifle.explosive', 'explosive.satchel'], ['multiplegrenadelauncher', 'homingmissile.launcher', 'rocket.launcher', 'explosive.timed', 'ammo.grenadelauncher.buckshot', 'ammo.rocket.smoke', 'ammo.grenadelauncher.he', 'ammo.rocket.fire', 'ammo.rocket.hv', 'ammo.rocket.basic', 'ammo.rocket.seeker', 'ammo.rocket.mlrs', 'submarine.torpedo.straight']];
 
-    var body = document.getElementsByTagName('body')[0];
-    body.appendChild(div1);
-    body.className = "modal-open";
-}
-
-function closepagePay() {
-    var Modal = document.getElementById('ModalPay');
-    var Modalparent = null;
-    try {
-        Modalparent = ((Modal.parentElement) ? Modal.parentElement : ((Modal.parentNode) ? Modal.parentNode : null));
-    } catch (error) {
-        return;
-    }
-    if (Modalparent == null)
-        return;
-    Modalparent.removeChild(Modal);
-    document.getElementsByTagName('body')[0].className = "";
-    btn_unlocked = 0;
-}
 
 function Open(el, usefade=true, zind=false) {
     closepage();
