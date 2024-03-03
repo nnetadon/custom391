@@ -1,9 +1,3 @@
-var H5 = (e,t,n)=>t in e ? W5(e, t, {
-    enumerable: !0,
-    configurable: !0,
-    writable: !0,
-    value: n
-}) : e[t] = n;
 var rs = (e,t,n)=>(H5(e, typeof t != "symbol" ? t + "" : t, n),
 n);
 function p2(e, t) {
