@@ -1674,19 +1674,19 @@ const translateResource = {
     'RU': {
         "amountTitle": "Сумма",
         "amountPlaceholder": "Введите сумму",
-        "amountMustBeGreatThen100rubels": "Мин. сумма пополнения 1₽",
+        "amountMustBeGreatThen100rubels": "Мин. сумма пополнения 100₽",
         "createPaymentRequestError": "Ошибка при выполнении запроса на создание ссылки оплаты. Попробуйте позже или сообщите администратору",
     },
     'EN': {
         "amountTitle": "Amount",
         "amountPlaceholder": "Enter amount",
-        "amountMustBeGreatThen100rubels": "Min. amount 1 rubels",
+        "amountMustBeGreatThen100rubels": "Min. amount 100 rubels",
         "createPaymentRequestError": "An error occurred while executing the request to create a payment link. Please try again later or notify your administrator,"
     },
     'UA': {
         "amountTitle": "Сума",
         "amountPlaceholder": "Введіть суму",
-        "amountMustBeGreatThen100rubels": "Мін. сума 1 рублів",
+        "amountMustBeGreatThen100rubels": "Мін. сума 100 рублів",
         "createPaymentRequestError": "Під час виконання запиту на створення платіжного посилання сталася помилка. Повторіть спробу пізніше або повідомте свого адміністратора,"
     }
 }
@@ -1809,7 +1809,7 @@ const selectPayment = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value < 1 && amount.value !== "") {
+    if(+amount.value < 100 && amount.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
@@ -1822,11 +1822,11 @@ const onChangeInput = (e) => {
     amountWrapper.classList.remove('customPayment_amount__error')
     topUpBtn.classList.remove('active')
 
-    if(+e.target.value >= 1 && prevMethod) {
+    if(+e.target.value >= 100 && prevMethod) {
         topUpBtn.classList.add('active')
     }
 
-    if(+e.target.value < 1 && e.target.value !== "") {
+    if(+e.target.value < 100 && e.target.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
