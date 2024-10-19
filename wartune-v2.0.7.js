@@ -1809,7 +1809,7 @@ const selectPayment = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value < 1 && amount.value !== "") {
+    if(+amount.value < 100 && amount.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
@@ -1822,7 +1822,7 @@ const onChangeInput = (e) => {
     amountWrapper.classList.remove('customPayment_amount__error')
     topUpBtn.classList.remove('active')
 
-    if(+e.target.value >= 100 && prevMethod) {
+    if(+e.target.value >= 1 && prevMethod) {
         topUpBtn.classList.add('active')
     }
 
