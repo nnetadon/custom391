@@ -1809,7 +1809,7 @@ const selectPayment = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value < 100 && amount.value !== "") {
+    if(+amount.value < 1 && amount.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
