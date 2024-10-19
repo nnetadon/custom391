@@ -1826,7 +1826,7 @@ const onChangeInput = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+e.target.value < 100 && e.target.value !== "") {
+    if(+e.target.value < 1 && e.target.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
