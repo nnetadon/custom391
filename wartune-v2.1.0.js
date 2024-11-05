@@ -1,9 +1,3 @@
-// Перезагруз
-
-// developer css/js: KirillRnD discord 7859. 
-
-// mtt
-  
 const event = new CustomEvent("setCustomConfig");
   
 window.currency = '₽';
@@ -15,7 +9,7 @@ oldDesignDropdownProduct = true; // Старый выбор товаров
 window.dispatchEvent(event);
   
 /* БОНУС - ДИСКОРД */
-  
+
 /* profile */
 function main() {
     window.dispatchEvent(new CustomEvent("initState"));
@@ -58,11 +52,12 @@ if (window.isAppReady) {
 const profileSection = document.querySelector('.ProfileContent');
 
 const interval = setInterval(() => {
+    const lang = translateResource[getLang()]; // Получаем текст на текущем языке
     const profileSectionWrapper = document.querySelector('.ProfileContent-module__wrapper');
     if (profileSectionWrapper) {
         clearInterval(interval); // Останавливаем проверку, если элемент найден
         const newContentHTML = `
-            <a class="tabs__promo_code__telegram" target="_blank" href="https://t.me/wartunerust" rel="noreferrer"><div class="tabs__promo_code__telegram__title"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM13.6277 8.08328C12.7389 7.30557 11.2616 7.30557 10.3728 8.08328C10.0611 8.35604 9.58723 8.32445 9.31447 8.01272C9.04171 7.701 9.0733 7.22717 9.38503 6.95441C10.8394 5.68186 13.1611 5.68186 14.6154 6.95441C16.1285 8.27835 16.1285 10.4717 14.6154 11.7956C14.3588 12.0202 14.0761 12.2041 13.778 12.3484C13.1018 12.6756 12.7502 13.1222 12.7502 13.5V14.25C12.7502 14.6642 12.4144 15 12.0002 15C11.586 15 11.2502 14.6642 11.2502 14.25V13.5C11.2502 12.221 12.3095 11.3926 13.1246 10.9982C13.3073 10.9098 13.4765 10.799 13.6277 10.6667C14.4577 9.9404 14.4577 8.80959 13.6277 8.08328ZM12 18C12.4142 18 12.75 17.6642 12.75 17.25C12.75 16.8358 12.4142 16.5 12 16.5C11.5858 16.5 11.25 16.8358 11.25 17.25C11.25 17.6642 11.5858 18 12 18Z" fill="white"></path></svg>Промокоды можно найти только в нашем Telegram канале.</div><div class="tabs__promo_code__telegram__body"><img src="https://gspics.org/images/2024/10/12/IIRpVL.jpg" alt="Dream Rust Avatar"><div class="tabs__promo_code__telegram__body__info"><h4>WARTUNE RUST в Telegram</h4><p>t.me</p></div></div></a>`;
+            <a class="tabs__promo_code__telegram" target="_blank" href="https://t.me/wartunerust" rel="noreferrer"><div class="tabs__promo_code__telegram__title"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM13.6277 8.08328C12.7389 7.30557 11.2616 7.30557 10.3728 8.08328C10.0611 8.35604 9.58723 8.32445 9.31447 8.01272C9.04171 7.701 9.0733 7.22717 9.38503 6.95441C10.8394 5.68186 13.1611 5.68186 14.6154 6.95441C16.1285 8.27835 16.1285 10.4717 14.6154 11.7956C14.3588 12.0202 14.0761 12.2041 13.778 12.3484C13.1018 12.6756 12.7502 13.1222 12.7502 13.5V14.25C12.7502 14.6642 12.4144 15 12.0002 15C11.586 15 11.2502 14.6642 11.2502 14.25V13.5C11.2502 12.221 12.3095 11.3926 13.1246 10.9982C13.3073 10.9098 13.4765 10.799 13.6277 10.6667C14.4577 9.9404 14.4577 8.80959 13.6277 8.08328ZM12 18C12.4142 18 12.75 17.6642 12.75 17.25C12.75 16.8358 12.4142 16.5 12 16.5C11.5858 16.5 11.25 16.8358 11.25 17.25C11.25 17.6642 11.5858 18 12 18Z" fill="white"></path></svg>${lang.tgpromo}</div><div class="tabs__promo_code__telegram__body"><img src="https://gspics.org/images/2024/10/12/IIRpVL.jpg" alt="Dream Rust Avatar"><div class="tabs__promo_code__telegram__body__info"><h4>WARTUNE RUST в Telegram</h4><p>t.me</p></div></div></a>`;
         
         profileSectionWrapper.insertAdjacentHTML('beforeend', newContentHTML);
     }
@@ -75,54 +70,32 @@ const config = { childList: true, subtree: true };
 let contentAdded = false; // Переменная для отслеживания добавления контента
 
 const addCustomContent = () => {
+    const lang = translateResource[getLang()]; // Получаем текст на текущем языке
     const modalFooter = document.querySelector('.PlayerBalanceModal-module__footer');
-    
-    // Проверяем, добавлен ли контент и существует ли modalFooter
-  /* фанпей
-  <div class="forms-oplata-grid">
-            <div>
-                <div class="payment-container">
-                    <a class="container-oplata-box" href="https://funpay.com/users/3380827/" target="_blank">
-                        <img alt="" src="https://i.imgur.com/VpmVjET.png" class="icon-user-oplata">
-                        <div class="textContainer-oplata">
-                            <span class="name-user">Карты (укр/снг/eu/usa)</span>
-                            <span class="category-user">Visa, Mastercard, PayPal</span>
-                        </div>
-                    </a>
-                    <a class="container-oplata-box" id="qiwi-inp-other-skin" target="_blank" href="https://steamcommunity.com/tradeoffer/new/?partner=1563791307&amp;token=pPln6B-z">
-                        <img alt="" src="https://i.imgur.com/k3JqyXs.png" class="icon-user-oplata">
-                        <div class="textContainer-oplata">
-                            <span class="name-user">Steam (скины)</span>
-                            <span class="category-user">RUST и CS2</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        */
+
     if (modalFooter && !contentAdded) { 
         const newCode = `
-        <details>
-            <summary>Бонусы при пополнении</summary>
-            <div data-v-76e4ca52="" class="knowledge__element_answer" style="height: 100%;">
-                <blockquote>
-                    <span>
-                        <blockquote class="spoil-Untext">
-                            от <b>100₽</b> - бонус <b>+10%</b> к сумме пополнения<br>
-                            от <b>500₽</b> - бонус <b>+20%</b> к сумме пополнения<br>
-                            от <b>1000₽</b> - бонус <b>+30%</b> к сумме пополнения<br><br>
-                            ⚠️ Бонусы при пополнении скинами могут быть как больше так и меньше (Зависит от скинов)!
-                        </blockquote>
-                    </span>
+<details>
+    <summary>${lang.bonus}</summary>
+    <div data-v-76e4ca52="" class="knowledge__element_answer" style="height: 100%;">
+        <blockquote>
+            <span>
+                <blockquote class="spoil-Untext">
+                    ${lang.first}<br>
+                    ${lang.second}<br>
+                    ${lang.third}<br><br>
+                    ${lang.note}
                 </blockquote>
-            </div>
-        </details>`;
-
-        // Вставляем новый код перед modalFooter
+            </span>
+        </blockquote>
+    </div>
+</details>
+`;
         modalFooter.insertAdjacentHTML('beforebegin', newCode);
         contentAdded = true; // Устанавливаем флаг, что контент был добавлен
     }
 };
+
 
 // Обновляем contentAdded, если модальное окно закрыто или отсутствует
 const checkIfModalClosed = () => {
@@ -147,6 +120,7 @@ observer.observe(targetNode, config);
 /* Виджет пополнение 10% + контакт админа */
 
 const headerInterval = setInterval(() => {  // Переименован на headerInterval
+    const lang = translateResource[getLang()]; // Получаем текст на текущем языке
     const headerContainer = document.querySelector('.container.headerContainer'); // Измените селектор на нужный вам
 
     if (headerContainer) {
@@ -155,8 +129,8 @@ const headerInterval = setInterval(() => {  // Переименован на hea
         const newContentHTML = `<div class="notice-container">
                 <span class="notice-icon"><i class="fa--xf far fa-info" aria-hidden="true"></i></span>
                 <div class="notice-content">
-                    <p align="center"><big><big>В магазине действует бонус от 10% при пополнении! Скидка дня <red7>10%</red7></big></big></p>
-                    <p align="center">Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения <a href="https://discord.gg/EpDjswKYHW"><red7>ссылка на наш канал</red7></a></p>
+                    <p align="center"><big><big>${lang.discount}</big></big></p>
+                    <p align="center">${lang.discount2}<a href="https://discord.gg/EpDjswKYHW"><red7>${lang.discountlink}</red7></a></p>
                 </div>
             </div>`;
         
@@ -1676,18 +1650,66 @@ const translateResource = {
         "amountPlaceholder": "Введите сумму",
         "amountMustBeGreatThen100rubels": "Мин. сумма пополнения 100₽",
         "createPaymentRequestError": "Ошибка при выполнении запроса на создание ссылки оплаты. Попробуйте позже или сообщите администратору",
+        "cardpay": "Карты",
+        "sbp": "СБП",
+        "bonus": "Бонусы при пополнении",
+        "first": "от <b>100₽</b> - бонус <b>+10%</b> к сумме пополнения",
+        "second": "от <b>500₽</b> - бонус <b>+20%</b> к сумме пополнения",
+        "third": "от <b>1000₽</b> - бонус <b>+30%</b> к сумме пополнения",
+        "note": "⚠️ Бонусы при пополнении скинами могут быть как больше так и меньше (Зависит от скинов)!",
+        "skinsdonate": "Скинами",
+        "tgpromo": "Промокоды можно найти только в нашем Telegram канале",
+        "discount": "В магазине действует бонус от 10% при пополнении!",
+        "discount2": "Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения ",
+        "discountlink": "ссылка на наш канал",
+        "copy": "Копировать",
+        "promocode_info": "Стартовый промокод для тебя",
+        "copyyes": "Промокод скопирован!",
+        "promo30": "Получи на баланс 30₽ в магазине"
     },
     'EN': {
         "amountTitle": "Amount",
         "amountPlaceholder": "Enter amount",
         "amountMustBeGreatThen100rubels": "Min. amount 100 rubels",
-        "createPaymentRequestError": "An error occurred while executing the request to create a payment link. Please try again later or notify your administrator,"
+        "createPaymentRequestError": "An error occurred while executing the request to create a payment link. Please try again later or notify your administrator,",
+        "cardpay": "Cards",
+        "sbp": "SPB | RU",
+        "bonus": "Bonuses when depositing",
+        "first": "from <b>100₽</b> - bonus <b>+10%</b> to the deposit amount",
+        "second": "from <b>500₽</b> - bonus <b>+20%</b> to the deposit amount",
+        "third": "from <b>1000₽</b> - bonus <b>+30%</b> to the deposit amount",
+        "note": "⚠️ Bonuses for top-ups with skins can be both higher and lower (depends on skins)!",
+        "skinsdonate": "Skinback",
+        "tgpromo": "Promo codes can only be found in our Telegram channel",
+        "discount": "The store has a 10% deposit bonus!",
+        "discount2": "If you are experiencing problems with replenishing your balance, contact the KirillRND administrator via Discord in private messages ",
+        "discountlink": "link to our channel",
+        "copy": "Copy",
+        "promocode_info": "The starting promo code for you",
+        "copyyes": "The promo code has been copied!",
+        "promo30": "Get 30₽ to your balance in the store"
     },
     'UA': {
         "amountTitle": "Сума",
         "amountPlaceholder": "Введіть суму",
         "amountMustBeGreatThen100rubels": "Мін. сума 100 рублів",
-        "createPaymentRequestError": "Під час виконання запиту на створення платіжного посилання сталася помилка. Повторіть спробу пізніше або повідомте свого адміністратора,"
+        "createPaymentRequestError": "Під час виконання запиту на створення платіжного посилання сталася помилка. Повторіть спробу пізніше або повідомте свого адміністратора,",
+        "cardpay": "Картi",
+	    "sbp": "СБП | RU",
+        "bonus": "Бонусы при пополнении",
+        "first": "від <b>100₽</b> - бонус <b>+10%</b> до суми поповнення",
+        "second": "від <b>500₽</b> - бонус <b>+20%</b> до суми поповнення",
+        "third": "від <b>1000₽</b> - бонус <b>+30%</b> до суми поповнення",
+        "note": "⚠️ Бонуси при поповненні зі скинами можуть бути як більше, так і менше (залежить від скинів)!",
+        "skinsdonate": "Скiнамi",
+        "tgpromo": "Промокоды можно найти только в нашем Telegram канале",
+        "discount": "В магазине действует бонус от 10% при пополнении!",
+        "discount2": "Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения ",
+        "discountlink": "ссылка на наш канал",
+        "copy": "Копировать",
+        "promocode_info": "Стартовый промокод для тебя",
+        "copyyes": "Промокод скопирован!",
+        "promo30": "Получи на баланс 30₽ в магазине"
     }
 }
 
@@ -1842,58 +1864,45 @@ const updateTopUpModal = () => {
 
         form.innerHTML = `
         <div class="customPayment_methods">
-            <div class="customPayment_method customPayment_method__checked" data-method="card">
+            <div class="customPayment_method customPayment_method__checked" data-method="card"><div class="payment-method__icon">RUB</div>
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
                 <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.33301 4.49984C1.33301 3.76346 1.92996 3.1665 2.66634 3.1665H10.6663C11.4027 3.1665 11.9997 3.76346 11.9997 4.49984V5.83317H13.333C14.0694 5.83317 14.6663 6.43012 14.6663 7.1665V12.4998C14.6663 13.2362 14.0694 13.8332 13.333 13.8332H5.33301C4.59663 13.8332 3.99967 13.2362 3.99967 12.4998V11.1665H2.66634C1.92996 11.1665 1.33301 10.5696 1.33301 9.83317V4.49984ZM5.33301 11.1665V12.4998H13.333V7.1665H11.9997V9.83317C11.9997 10.5696 11.4027 11.1665 10.6663 11.1665H5.33301ZM3.99967 6.49984C3.99967 6.13165 4.29815 5.83317 4.66634 5.83317H5.33301C5.70119 5.83317 5.99967 6.13165 5.99967 6.49984C5.99967 6.86802 5.70119 7.1665 5.33301 7.1665H4.66634C4.29815 7.1665 3.99967 6.86802 3.99967 6.49984Z"></path></svg>
-                <span class="customPayment_methodName">Карты (rub)</span>
+                <span class="customPayment_methodName">${t.cardpay}</span>
             </div>
-            <div class="customPayment_method" data-method="sbp">
+            <div class="customPayment_method" data-method="sbp"><div class="payment-method__icon">RUB</div>
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
                 <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.78303 4.68713L8.79102 8.28699V6.56075L10.3198 5.62547L10.3206 5.62547L8.80032 4.69808L7.17969 1.78564L13.4379 5.62257L13.4486 5.62256L13.4433 5.62584L13.4492 5.62945L13.4373 5.62946L8.79142 8.47027L8.79155 8.52977L7.17969 7.52972V1.78564L8.78303 4.68713ZM2.55367 12.2862L2.55367 12.2872L2.55449 12.2857L7.17969 9.46011L7.18057 15.2128L7.17969 15.2144L7.18057 15.2139V15.2144L7.18099 15.2136L13.4296 11.3736L13.4393 11.3736L13.4344 11.3707L13.4393 11.3677L13.4296 11.3677L2.55176 4.7124L2.55367 12.284L2.55176 12.2874L2.55367 12.2862ZM4.1834 9.38466L5.62624 8.50252L4.1834 7.61903V9.38466ZM8.80725 12.299L7.2745 15.0446L8.79155 12.3022V10.4407L10.3188 11.3759L8.80725 12.299Z"></path></svg>
-                <span class="customPayment_methodName">СБП</span>
+                <span class="customPayment_methodName">${t.sbp}</span>
             </div>
-            <div class="customPayment_method" data-method="crypto">
+            <div class="customPayment_method" data-method="crypto"><div class="payment-method__icon">EUR, P2P</div>
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
                 <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path d="M8.83301 10.1665C9.10914 10.1665 9.33301 9.94264 9.33301 9.6665C9.33301 9.39037 9.10914 9.1665 8.83301 9.1665H7.33301V10.1665H8.83301Z"></path><path d="M7.33301 6.8335H8.83301C9.10914 6.8335 9.33301 7.05736 9.33301 7.3335C9.33301 7.60963 9.10914 7.8335 8.83301 7.8335H7.33301V6.8335Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1.33301 8.50016C1.33301 4.81826 4.31777 1.8335 7.99967 1.8335C11.6815 1.8335 14.6663 4.81826 14.6663 8.50016C14.6663 12.182 11.6815 15.1668 7.99967 15.1668C4.31777 15.1668 1.33301 12.182 1.33301 8.50016ZM5.66634 5.50016C5.29815 5.50016 4.99967 5.79864 4.99967 6.16683C4.99967 6.53502 5.29815 6.8335 5.66634 6.8335H5.99967V10.1668H5.66634C5.29815 10.1668 4.99967 10.4653 4.99967 10.8335C4.99967 11.2017 5.29815 11.5002 5.66634 11.5002H7.33301V11.8335C7.33301 12.2017 7.63147 12.5002 7.99967 12.5002C8.36787 12.5002 8.66634 12.2017 8.66634 11.8335V11.5002H8.83301C9.84554 11.5002 10.6663 10.6794 10.6663 9.66683C10.6663 9.22363 10.5091 8.81716 10.2473 8.50016C10.5091 8.18316 10.6663 7.7767 10.6663 7.3335C10.6663 6.32098 9.84554 5.50016 8.83301 5.50016H8.66634V5.16683C8.66634 4.79864 8.36787 4.50016 7.99967 4.50016C7.63147 4.50016 7.33301 4.79864 7.33301 5.16683V5.50016H5.66634Z"></path></svg>
-                <span class="customPayment_methodName">Crypto</span>
+                <span class="customPayment_methodName">Cryptomus</span>
             </div>
-            <div class="customPayment_method" data-method="paypal">
-                <div class="customPayment_methodCheckWrapper">
-                    <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
-                </div>
-                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M7.12043 9.16C7.1871 9.16 8.73376 9.22667 9.65376 9H9.66043C10.7204 8.74 12.1938 7.99333 12.5738 5.55333C12.5738 5.55333 13.4204 2.5 9.22043 2.5H5.61376C5.2871 2.5 5.0071 2.74 4.95376 3.06L3.42043 12.7667C3.3871 12.9667 3.5471 13.1533 3.7471 13.1533H6.03376L6.59376 9.60667C6.63376 9.35333 6.85376 9.16 7.12043 9.16Z"></path><path d="M13.1597 6.02686C12.6197 8.51352 10.9197 9.82686 8.21304 9.82686H7.23304L6.54638 14.1735C6.51971 14.3469 6.65304 14.5002 6.82638 14.5002H8.09304C8.31971 14.5002 8.51971 14.3335 8.55304 14.1069C8.60638 13.8402 8.89971 11.8935 8.95971 11.5602C8.99304 11.3335 9.19304 11.1669 9.41971 11.1669H9.71304C11.593 11.1669 13.0664 10.4002 13.4997 8.19352C13.673 7.30019 13.5797 6.56686 13.1597 6.02686Z"></path></svg>
-                <span class="customPayment_methodName">PayPal</span>
-            </div>
-            <div class="customPayment_method" data-method="gpay">
-                <div class="customPayment_methodCheckWrapper">
-                    <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
-                </div>
-                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path d="M14.3893 8.65126C14.3893 8.17853 14.3469 7.724 14.2681 7.2876H7.98926V9.86946H11.5771C11.4195 10.6997 10.9468 11.4028 10.2377 11.8755V13.5543H12.4014C13.662 12.3907 14.3893 10.6815 14.3893 8.65126Z"></path><path d="M7.98767 15.1669C9.78767 15.1669 11.2967 14.5729 12.3998 13.5547L10.2361 11.8759C9.64221 12.2759 8.88461 12.5184 7.98767 12.5184C6.25432 12.5184 4.78159 11.3487 4.25431 9.77295H2.03613V11.4941C3.1331 13.6699 5.38159 15.1669 7.98767 15.1669Z"></path><path d="M4.25658 9.76675C4.12324 9.36675 4.04446 8.94255 4.04446 8.50008C4.04446 8.05768 4.12324 7.63341 4.25658 7.23341V5.51221H2.03839C1.58384 6.40917 1.32324 7.42128 1.32324 8.50008C1.32324 9.57888 1.58384 10.591 2.03839 11.4879L3.76567 10.1425L4.25658 9.76675Z"></path><path d="M7.98767 4.48804C8.96947 4.48804 9.84221 4.82744 10.5391 5.48198L12.4483 3.57289C11.2907 2.4941 9.78767 1.8335 7.98767 1.8335C5.38159 1.8335 3.1331 3.33047 2.03613 5.51229L4.25431 7.2335C4.78159 5.65774 6.25432 4.48804 7.98767 4.48804Z"></path></svg>
-                <span class="customPayment_methodName">GPay</span>
-            </div>
+            
             <div class="customPayment_method" data-method="skins">
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
                 <svg class="customPayment_methodIcon" height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><path d="m363.929 0-12.346 12.346L340.036.799l-21.458 21.458 11.547 11.547-222.343 222.343L96.235 244.6l-21.458 21.458 11.863 11.863c-17.171 21.661-18.478 51.842-3.925 74.805L399.683 35.755 363.929 0zM304.934 330.282c27.516-27.516 29.126-71.268 4.845-100.695l129.522-129.523-30.506-30.506-293.393 293.396 30.506 30.506 16.191-16.191L259.625 512l84.679-84.679-57.279-79.13 17.909-17.909zm-35.931-6.986-18.666-25.788-3.561-4.919 5.696-5.696 15.814 15.814 21.458-21.458-15.814-15.814 14.228-14.228c12.546 17.432 10.985 41.949-4.683 57.617l-14.472 14.472z"/></svg>
-                <span class="customPayment_methodName">Скины</span>
+                <span class="customPayment_methodName">${t.skinsdonate}</span>
             </div>
         </div>
 
         <div class="customPayment_amount">
-            <label class="customPayment_label" for="sum">Сумма</label>
-            <div class="customPayment_inputWrapper">
-                <input class="customPayment_input" type="number" id="sum" placeholder="Введите сумму">
-                <span class="customPayment_currency">₽</span>
-            </div>
-            <span class="customPayment_inputError">${t['amountMustBeGreatThen100rubels']}</span>
+        <label class="customPayment_label" for="sum">${t.amountTitle}</label>
+        <div class="customPayment_inputWrapper">
+            <input class="customPayment_input" type="number" id="sum" placeholder="${t.amountPlaceholder}">
+            <span class="customPayment_currency">₽</span>
         </div>
+        <span class="customPayment_inputError">${t['amountMustBeGreatThen100rubels']}</span>
+    </div>
         `
 
         const payBtn = document.querySelector('.PlayerBalanceModal-module__footer .Button-module__btn.Button-module__accent')
@@ -1933,3 +1942,90 @@ if(window.isAppReady) {
         paynowMain()
     })
 }
+
+// Промокод 
+/*
+document.addEventListener("DOMContentLoaded", function() {
+    // Создаем контейнер для промокода
+    const promoCodeContainer = document.createElement('div');
+    promoCodeContainer.id = 'promoCodeContainer';
+    promoCodeContainer.style.position = 'fixed';
+    promoCodeContainer.style.bottom = '20px';
+    promoCodeContainer.style.right = '20px';
+    promoCodeContainer.style.backgroundColor = '#2e3740';
+    promoCodeContainer.style.boxShadow = 'rgba(0, 0, 0, 0.1) 0px 2px 10px';
+    promoCodeContainer.style.borderRadius = '10px';
+    promoCodeContainer.style.padding = '20px';
+    promoCodeContainer.style.zIndex = '1000';
+    promoCodeContainer.style.display = 'flex';
+    promoCodeContainer.style.flexDirection = 'column';
+
+    // Контент контейнера на русском
+      const lang = translateResource[getLang()]; // Получаем текст на текущем языке
+    promoCodeContainer.innerHTML = `
+    <button style="cursor: pointer; align-self: flex-end;" onclick="this.parentElement.style.display='none'">×</button>\
+    <p>${lang.promocode_info}</p>\
+    <p>${lang.promo30}</p>\
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: rgb(255 255 255 / 10%); border-radius: 10px; will-change: transform; backface-visibility: hidden; margin: 10px; font-weight: 600;">\
+        <p id="promo" style="margin-right: 10px; color: #fff;">WARTUNE-START</p>\
+        <button id="copyButton" style="background: #2E3740; box-shadow: inset 0 0 51pt 0 rgba(255, 255, 255, .05); backdrop-filter: blur(48px); color: #ffffff; padding: 6px 10px; transition: all 0.2s; border-radius: 10px; cursor: pointer;">${lang.copy}</button>\
+    </div>\
+    <div class="d-flex promos mt-4" style="display: none;">\
+        <p>${lang.copyyes}</p>\
+    </div>\
+`;
+
+
+    // Добавляем контейнер в body
+    document.body.appendChild(promoCodeContainer);
+
+    // Функция для отображения уведомления
+    function showToast(message, isError = false) {
+        const toastWrapper = document.createElement('div');
+        toastWrapper.className = 'Toasts-module__wrapper';
+        
+        const toast = document.createElement('div');
+        toast.className = `Toast-module__toast ${isError ? 'Toast-module__error' : 'Toast-module__success'}`;
+        
+        const svgIcon = isError ? `
+            <svg class="Toast-module__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#ff365a" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"></path>
+            </svg>
+        ` : `
+            <svg class="Toast-module__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#49d663" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"></path>
+            </svg>
+        `;
+        
+        const messageWrapper = `
+            <div class="Toast-module__messageWrapper">
+                <p class="Toast-module__title">${isError ? lang.close : lang.promocode_info}</p>
+                <span class="Toast-module__message">${isError ? 'Недопустимый промокод' : message}</span>
+            </div>
+        `;
+        
+        toast.innerHTML = `${svgIcon}${messageWrapper}`;
+        toastWrapper.appendChild(toast);
+        document.body.appendChild(toastWrapper);
+
+        // Удаление уведомления через 3 секунды
+        setTimeout(() => {
+            document.body.removeChild(toastWrapper);
+        }, 3000);
+    }
+
+    // Обработчик для кнопки "Скопировать"
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const promoText = document.getElementById('promo').innerText;
+        navigator.clipboard.writeText(promoText).then(() => {
+            promoCodeContainer.querySelector('div').style.display = 'none'; // Скрыть контейнер с промокодом и кнопкой
+            promoCodeContainer.querySelector('.promos').style.display = 'flex'; // Показать сообщение о копировании
+            showToast('Промокод успешно скопирован!'); // Показать успех
+        }).catch(err => {
+            console.error('Ошибка при копировании текста: ', err);
+            showToast('Ошибка при копировании текста.', true); // Показать ошибку
+        });
+    });
+});
+
+*/
