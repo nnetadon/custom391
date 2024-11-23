@@ -4,7 +4,6 @@ window.currency = '₽';
 window.zeroToFree = true;
 window.hideServerSelector = true; // Добавлен `window.`
 window.sidebarStoreToRight = true; // Добавлен `window.`
-oldDesignDropdownProduct = true; // Старый выбор товаров
   
 window.dispatchEvent(event);
 
