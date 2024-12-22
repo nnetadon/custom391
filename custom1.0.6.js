@@ -224,7 +224,7 @@ const observer = new MutationObserver(callback);
 observer.observe(targetNode, config);
 
 /* Виджет пополнение 10% + контакт админа */
-const eventEndDate = new Date('2025-1-11T23:59:59'); // Конец события
+const eventEndDate = new Date('2025-01-11T23:59:59'); // Конец события
 
 const headerInterval = setInterval(() => {  
     const lang = translateResource[getLang()]; 
