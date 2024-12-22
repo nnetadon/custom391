@@ -224,7 +224,7 @@ const observer = new MutationObserver(callback);
 observer.observe(targetNode, config);
 
 /* Виджет пополнение 10% + контакт админа */
-const eventEndDate = new Date('2024-11-30T23:59:59'); // Конец события
+const eventEndDate = new Date('2025-1-11T23:59:59'); // Конец события
 
 const headerInterval = setInterval(() => {  
     const lang = translateResource[getLang()]; 
@@ -2206,7 +2206,7 @@ const translateResource = {
         "note": "⚠️ Бонусы при пополнении скинами могут быть как больше так и меньше (Зависит от скинов)!",
         "skinsdonate": "Скинами",
         "tgpromo": "Промокоды можно найти только в нашем Telegram канале",
-        "discount": "ЧЕРНАЯ ПЯТНИЦА СКИДКИ ДО 90% НА ВСЕ ТОВАРЫ",
+        "discount": "Рождественские скидки!",
         "discount2": "Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения ",
         "discountlink": "ссылка на наш канал",
         "copy": "Копировать",
@@ -2229,7 +2229,7 @@ const translateResource = {
         "note": "⚠️ Bonuses for top-ups with skins can be both higher and lower (depends on skins)!",
         "skinsdonate": "Skinback",
         "tgpromo": "Promo codes can only be found in our Telegram channel",
-        "discount": "BLACK FRIDAY DISCOUNTS OF UP TO 90% ON ALL PRODUCTS",
+        "discount": "Christmas discounts",
         "discount2": "If you are experiencing problems with replenishing your balance, contact the KirillRND administrator via Discord in private messages ",
         "discountlink": "link to our channel",
         "copy": "Copy",
@@ -2252,7 +2252,7 @@ const translateResource = {
         "note": "⚠️ Бонуси при поповненні зі скинами можуть бути як більше, так і менше (залежить від скинів)!",
         "skinsdonate": "Скiнамi",
         "tgpromo": "Промокоды можно найти только в нашем Telegram канале",
-        "discount": "ЧЕРНАЯ ПЯТНИЦА СКИДКИ ДО 90% НА ВСЕ ТОВАРЫ",
+        "discount": "Christmas discounts",
         "discount2": "Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения ",
         "discountlink": "ссылка на наш канал",
         "copy": "Копировать",
