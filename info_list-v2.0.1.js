@@ -11,7 +11,6 @@ function initBanSystem() {
     const API_KEY = 'f39428d5-3ee8-4ba9-84e9-6105fb10ea04';
     const PUBLIC_API_KEY = 'c2a2b5d6-13f7-4cc2-9c2c-122161d76e02';
 
-    // Загрузка списка серверов
     function loadServers() {
         $.ajax({
             url: SERVERS_API_URL,
@@ -36,7 +35,6 @@ function initBanSystem() {
                 };
 
                 response.forEach(server => {
-                    // Пропускаем сервер с ID 6266
                     if (server.id === '6266' || server.id === 6266) return;
                     
                     const serverName = serverNames[server.id] || server.name || `Сервер ${server.id}`;
@@ -45,7 +43,6 @@ function initBanSystem() {
                         text: serverName
                     });
                     
-                    // Выбираем текущий сервер
                     if (server.id.toString() === window.banSystem.currentServerId) {
                         option.prop('selected', true);
                     }
@@ -55,7 +52,7 @@ function initBanSystem() {
 
                 serverSelector.on('change', function() {
                     window.banSystem.currentServerId = this.value;
-                    window.banSystem.currentPage = 0; // Сбрасываем страницу
+                    window.banSystem.currentPage = 0;
                     loadBans(0);
                 });
             },
@@ -76,13 +73,11 @@ function initBanSystem() {
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        // Формируем URL с параметрами
         let url = `${API_URL}?sort_by=created&page=${page}`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
         }
         if (searchQuery) {
-            // Проверяем, является ли запрос SteamID (только цифры)
             if (/^\d+$/.test(searchQuery)) {
                 url += `&steam_id=${encodeURIComponent(searchQuery)}`;
             } else {
@@ -158,24 +153,20 @@ function initBanSystem() {
                 </div>
             `);
 
-            // Колонка причины
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
             `);
 
-            // Колонка локации
             const locationCell = $('<td>').html(`
                 <img src="https://flagcdn.com/w20/${player.ip_details.country_code.toLowerCase()}.png" 
                      class="country-flag" alt="${player.ip_details.country_code}">
                 ${player.ip_details.city}, ${player.ip_details.country_name}
             `);
 
-            // Колонка даты
             const banDate = new Date(ban.created_at);
             const dateCell = $('<td>').text(banDate.toLocaleString('ru-RU'));
 
-            // Колонка VAC банов
             const vacBans = player.steam_data?.ban_data?.vac_ban;
             const vacCell = $('<td>').html(`
                 ${vacBans ? `
