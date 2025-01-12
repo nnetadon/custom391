@@ -181,8 +181,7 @@ function main() {
                 <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
                 <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
                     <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
-                    <a data-v-5b1745d7="" href="/page/faq">Сервера</a>
-                    <a data-v-5b1745d7="" href="/page/faq">Правила</a>
+                    <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
                     <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
                     <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
 					<a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
