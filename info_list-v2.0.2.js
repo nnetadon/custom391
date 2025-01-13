@@ -5,6 +5,28 @@ window.banSystem = {
     currentServerId: '6364'
 };
 
+function waitForJQuery() {
+    return new Promise((resolve) => {
+        if (window.jQuery) {
+            resolve();
+            return;
+        }
+
+        const interval = setInterval(() => {
+            if (window.jQuery) {
+                clearInterval(interval);
+                resolve();
+            }
+        }, 100);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            console.error('jQuery load timeout');
+            resolve();
+        }, 10000);
+    });
+}
+
 function initBanSystem() {
     const API_URL = 'https://court.rustapp.io/public/bans';
     const SERVERS_API_URL = 'https://court.rustapp.io/public/servers';
@@ -233,26 +255,33 @@ function initBanSystem() {
     initSearch();
 }
 
-function main() {
-    window.dispatchEvent(new CustomEvent("initComponentsManager"));
+async function main() {
+    try {
+        await waitForJQuery();
+        window.dispatchEvent(new CustomEvent("initComponentsManager"));
 
-    window.componentsManager.addListener('CUSTOM_PAGE', 'DID_MOUNT', () => {
-        if ($('#bansTableBody').length) {
-            initBanSystem();
-        }
-    });
+        window.componentsManager.addListener('CUSTOM_PAGE', 'DID_MOUNT', () => {
+            if ($('#bansTableBody').length && !window.banSystem.initialized) {
+                window.banSystem.initialized = true;
+                initBanSystem();
+            }
+        });
 
-    window.componentsManager.addListener('CUSTOM_PAGE', 'DID_UPDATE', () => {
-        if ($('#bansTableBody').length && !window.banSystem.initialized) {
-            initBanSystem();
-        }
-    });
+        window.componentsManager.addListener('CUSTOM_PAGE', 'DID_UPDATE', () => {
+            if ($('#bansTableBody').length && !window.banSystem.initialized) {
+                window.banSystem.initialized = true;
+                initBanSystem();
+            }
+        });
 
-    window.componentsManager.load();
+        window.componentsManager.load();
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
 }
 
 if (window.isAppReady) {
     main();
 } else {
-    window.addEventListener('appReady', main);
+    window.addEventListener('appReady', () => main());
 }
