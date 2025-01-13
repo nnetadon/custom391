@@ -31,7 +31,8 @@ function initBanSystem() {
 
                 const serverNames = {
                     '6364': 'Combat Arenas | Targets | Aimbot',
-                    '6367': 'Wartune #2 SOLO'
+                    '6367': 'Wartune #2 SOLO',
+                    '6369': 'Wartune #3 MAX 3'
                 };
 
                 response.forEach(server => {
