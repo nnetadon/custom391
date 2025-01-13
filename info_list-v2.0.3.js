@@ -6,14 +6,17 @@ window.banSystem = {
 };
 
 function waitForJQuery() {
+    console.log('Waiting for jQuery...');
     return new Promise((resolve) => {
         if (window.jQuery) {
+            console.log('jQuery already loaded');
             resolve();
             return;
         }
 
         const interval = setInterval(() => {
             if (window.jQuery) {
+                console.log('jQuery loaded');
                 clearInterval(interval);
                 resolve();
             }
@@ -28,12 +31,14 @@ function waitForJQuery() {
 }
 
 function initBanSystem() {
+    console.log('Initializing ban system...');
     const API_URL = 'https://court.rustapp.io/public/bans';
     const SERVERS_API_URL = 'https://court.rustapp.io/public/servers';
     const API_KEY = 'f39428d5-3ee8-4ba9-84e9-6105fb10ea04';
     const PUBLIC_API_KEY = 'c2a2b5d6-13f7-4cc2-9c2c-122161d76e02';
 
     function loadServers() {
+        console.log('Loading servers...');
         $.ajax({
             url: SERVERS_API_URL,
             method: 'GET',
@@ -43,6 +48,7 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
+                console.log('Servers loaded:', response);
                 const serverSelector = $('#serverSelector');
                 serverSelector.empty();
                 
@@ -77,16 +83,23 @@ function initBanSystem() {
                     window.banSystem.currentPage = 0;
                     loadBans(0);
                 });
+
+                // После загрузки серверов сразу загружаем баны
+                loadBans(window.banSystem.currentPage);
             },
             error: function(xhr, status, error) {
                 console.error('Error loading servers:', error);
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
                 $('#serverSelector').html('<option>Ошибка загрузки серверов</option>');
             }
         });
     }
 
     function loadBans(page, searchQuery = '') {
+        console.log('Loading bans, page:', page, 'query:', searchQuery);
         if (window.banSystem.isLoading) {
+            console.log('Already loading bans, skipping...');
             return;
         }
 
@@ -107,6 +120,7 @@ function initBanSystem() {
             }
         }
         
+        console.log('Loading bans from URL:', url);
         $.ajax({
             url: url,
             method: 'GET',
@@ -116,6 +130,7 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
+                console.log('Bans loaded:', response);
                 if (!response || !response.results || !Array.isArray(response.results)) {
                     console.error('Invalid response format:', response);
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
@@ -152,6 +167,7 @@ function initBanSystem() {
     }
 
     function displayBans(bans) {
+        console.log('Displaying bans:', bans);
         const tableBody = $('#bansTableBody');
         tableBody.empty();
 
@@ -202,6 +218,7 @@ function initBanSystem() {
     }
 
     function updatePagination(currentPage, totalPages) {
+        console.log('Updating pagination:', currentPage, totalPages);
         const pagination = $('#pagination');
         pagination.empty();
 
@@ -227,6 +244,7 @@ function initBanSystem() {
     }
 
     function initSearch() {
+        console.log('Initializing search...');
         const searchInput = $('#playerSearch');
         const searchButton = $('#searchButton');
 
@@ -251,24 +269,29 @@ function initBanSystem() {
     }
 
     loadServers();
-    loadBans(window.banSystem.currentPage);
     initSearch();
 }
 
 async function main() {
     try {
+        console.log('Starting main initialization...');
         await waitForJQuery();
+        console.log('jQuery loaded, dispatching initComponentsManager...');
         window.dispatchEvent(new CustomEvent("initComponentsManager"));
 
         window.componentsManager.addListener('CUSTOM_PAGE', 'DID_MOUNT', () => {
+            console.log('DID_MOUNT triggered, checking bansTableBody...');
             if ($('#bansTableBody').length && !window.banSystem.initialized) {
+                console.log('Initializing ban system from DID_MOUNT');
                 window.banSystem.initialized = true;
                 initBanSystem();
             }
         });
 
         window.componentsManager.addListener('CUSTOM_PAGE', 'DID_UPDATE', () => {
+            console.log('DID_UPDATE triggered, checking bansTableBody...');
             if ($('#bansTableBody').length && !window.banSystem.initialized) {
+                console.log('Initializing ban system from DID_UPDATE');
                 window.banSystem.initialized = true;
                 initBanSystem();
             }
@@ -281,7 +304,12 @@ async function main() {
 }
 
 if (window.isAppReady) {
+    console.log('Window is ready, starting main...');
     main();
 } else {
-    window.addEventListener('appReady', () => main());
+    console.log('Window not ready, waiting for appReady event...');
+    window.addEventListener('appReady', () => {
+        console.log('appReady event triggered, starting main...');
+        main();
+    });
 }
