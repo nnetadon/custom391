@@ -1,3 +1,8 @@
+// Сначала загружаем jQuery
+const jqueryScript = document.createElement('script');
+jqueryScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+document.head.appendChild(jqueryScript);
+
 window.banSystem = {
     initialized: false,
     currentPage: 0,
@@ -8,25 +13,21 @@ window.banSystem = {
 function waitForJQuery() {
     console.log('Waiting for jQuery...');
     return new Promise((resolve) => {
-        if (window.jQuery) {
+        if (typeof jQuery !== 'undefined') {
             console.log('jQuery already loaded');
             resolve();
             return;
         }
 
-        const interval = setInterval(() => {
-            if (window.jQuery) {
-                console.log('jQuery loaded');
-                clearInterval(interval);
-                resolve();
-            }
-        }, 100);
-
-        setTimeout(() => {
-            clearInterval(interval);
-            console.error('jQuery load timeout');
+        jqueryScript.onload = () => {
+            console.log('jQuery loaded via script');
             resolve();
-        }, 10000);
+        };
+
+        jqueryScript.onerror = () => {
+            console.error('Error loading jQuery');
+            resolve();
+        };
     });
 }
 
@@ -39,7 +40,7 @@ function initBanSystem() {
 
     function loadServers() {
         console.log('Loading servers...');
-        $.ajax({
+        jQuery.ajax({
             url: SERVERS_API_URL,
             method: 'GET',
             headers: {
@@ -49,10 +50,10 @@ function initBanSystem() {
             },
             success: function(response) {
                 console.log('Servers loaded:', response);
-                const serverSelector = $('#serverSelector');
+                const serverSelector = jQuery('#serverSelector');
                 serverSelector.empty();
                 
-                serverSelector.append($('<option>', {
+                serverSelector.append(jQuery('<option>', {
                     value: '',
                     text: 'Все сервера'
                 }));
@@ -66,7 +67,7 @@ function initBanSystem() {
                     if (server.id === '6266' || server.id === 6266) return;
                     
                     const serverName = serverNames[server.id] || server.name || `Сервер ${server.id}`;
-                    const option = $('<option>', {
+                    const option = jQuery('<option>', {
                         value: server.id,
                         text: serverName
                     });
@@ -91,7 +92,7 @@ function initBanSystem() {
                 console.error('Error loading servers:', error);
                 console.error('XHR:', xhr);
                 console.error('Status:', status);
-                $('#serverSelector').html('<option>Ошибка загрузки серверов</option>');
+                jQuery('#serverSelector').html('<option>Ошибка загрузки серверов</option>');
             }
         });
     }
@@ -106,7 +107,7 @@ function initBanSystem() {
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
-        $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
+        jQuery('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
         let url = `${API_URL}?sort_by=created&page=${page}`;
         if (window.banSystem.currentServerId) {
@@ -121,7 +122,7 @@ function initBanSystem() {
         }
         
         console.log('Loading bans from URL:', url);
-        $.ajax({
+        jQuery.ajax({
             url: url,
             method: 'GET',
             headers: {
@@ -133,7 +134,7 @@ function initBanSystem() {
                 console.log('Bans loaded:', response);
                 if (!response || !response.results || !Array.isArray(response.results)) {
                     console.error('Invalid response format:', response);
-                    $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
+                    jQuery('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
                     return;
                 }
                 
@@ -141,15 +142,15 @@ function initBanSystem() {
                     const searchMessage = searchQuery ? 
                         `Игрок "${searchQuery}" не найден в списке заблокированных` : 
                         'Нет активных банов';
-                    $('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
-                    $('#totalBans').text('Всего банов: 0');
-                    $('#pagination').empty();
+                    jQuery('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
+                    jQuery('#totalBans').text('Всего банов: 0');
+                    jQuery('#pagination').empty();
                     return;
                 }
 
                 displayBans(response.results);
                 updatePagination(response.page, response.total_pages || Math.ceil(response.total / response.limit));
-                $('#totalBans').text(`Всего банов: ${response.total || response.results.length}`);
+                jQuery('#totalBans').text(`Всего банов: ${response.total || response.results.length}`);
             },
             error: function(xhr, status, error) {
                 console.error('Error loading bans:', {
@@ -158,7 +159,7 @@ function initBanSystem() {
                     responseText: xhr.responseText,
                     error: error
                 });
-                $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
+                jQuery('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
                 window.banSystem.isLoading = false;
@@ -168,14 +169,14 @@ function initBanSystem() {
 
     function displayBans(bans) {
         console.log('Displaying bans:', bans);
-        const tableBody = $('#bansTableBody');
+        const tableBody = jQuery('#bansTableBody');
         tableBody.empty();
 
         bans.forEach((ban, index) => {
             const player = ban.player;
-            const row = $('<tr>');
+            const row = jQuery('<tr>');
             
-            const playerCell = $('<td>').html(`
+            const playerCell = jQuery('<td>').html(`
                 <div class="d-flex align-items-center">
                     <a href="https://steamcommunity.com/profiles/${player.steam_id}" target="_blank" class="me-2">
                         <img src="${player.steam_avatar}" alt="Avatar" class="avatar-img">
@@ -191,22 +192,22 @@ function initBanSystem() {
                 </div>
             `);
 
-            const reasonCell = $('<td>').html(`
+            const reasonCell = jQuery('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
             `);
 
-            const locationCell = $('<td>').html(`
+            const locationCell = jQuery('<td>').html(`
                 <img src="https://flagcdn.com/w20/${player.ip_details.country_code.toLowerCase()}.png" 
                      class="country-flag" alt="${player.ip_details.country_code}">
                 ${player.ip_details.city}, ${player.ip_details.country_name}
             `);
 
             const banDate = new Date(ban.created_at);
-            const dateCell = $('<td>').text(banDate.toLocaleString('ru-RU'));
+            const dateCell = jQuery('<td>').text(banDate.toLocaleString('ru-RU'));
 
             const vacBans = player.steam_data?.ban_data?.vac_ban;
-            const vacCell = $('<td>').html(`
+            const vacCell = jQuery('<td>').html(`
                 ${vacBans ? `
                     <span class="badge bg-danger">VAC: ${vacBans.count}</span>
                 ` : 'Нет VAC банов'}
@@ -219,24 +220,24 @@ function initBanSystem() {
 
     function updatePagination(currentPage, totalPages) {
         console.log('Updating pagination:', currentPage, totalPages);
-        const pagination = $('#pagination');
+        const pagination = jQuery('#pagination');
         pagination.empty();
 
         if (totalPages <= 1) return;
 
-        const prevBtn = $('<button>')
+        const prevBtn = jQuery('<button>')
             .addClass('btn btn-outline-secondary me-2')
             .prop('disabled', currentPage === 0)
             .html('<i class="bi bi-chevron-left"></i>')
             .click(() => loadBans(currentPage - 1));
 
-        const nextBtn = $('<button>')
+        const nextBtn = jQuery('<button>')
             .addClass('btn btn-outline-secondary ms-2')
             .prop('disabled', currentPage >= totalPages - 1)
             .html('<i class="bi bi-chevron-right"></i>')
             .click(() => loadBans(currentPage + 1));
 
-        const pageInfo = $('<span>')
+        const pageInfo = jQuery('<span>')
             .addClass('btn btn-outline-secondary')
             .text('Страница ' + (currentPage + 1) + ' из ' + totalPages);
 
@@ -245,8 +246,8 @@ function initBanSystem() {
 
     function initSearch() {
         console.log('Initializing search...');
-        const searchInput = $('#playerSearch');
-        const searchButton = $('#searchButton');
+        const searchInput = jQuery('#playerSearch');
+        const searchButton = jQuery('#searchButton');
 
         function performSearch() {
             const query = searchInput.val().trim();
@@ -262,7 +263,7 @@ function initBanSystem() {
         });
 
         searchInput.on('input', function() {
-            if ($(this).val().trim() === '') {
+            if (jQuery(this).val().trim() === '') {
                 loadBans(0);
             }
         });
@@ -281,7 +282,7 @@ async function main() {
 
         window.componentsManager.addListener('CUSTOM_PAGE', 'DID_MOUNT', () => {
             console.log('DID_MOUNT triggered, checking bansTableBody...');
-            if ($('#bansTableBody').length && !window.banSystem.initialized) {
+            if (jQuery('#bansTableBody').length && !window.banSystem.initialized) {
                 console.log('Initializing ban system from DID_MOUNT');
                 window.banSystem.initialized = true;
                 initBanSystem();
@@ -290,7 +291,7 @@ async function main() {
 
         window.componentsManager.addListener('CUSTOM_PAGE', 'DID_UPDATE', () => {
             console.log('DID_UPDATE triggered, checking bansTableBody...');
-            if ($('#bansTableBody').length && !window.banSystem.initialized) {
+            if (jQuery('#bansTableBody').length && !window.banSystem.initialized) {
                 console.log('Initializing ban system from DID_UPDATE');
                 window.banSystem.initialized = true;
                 initBanSystem();
