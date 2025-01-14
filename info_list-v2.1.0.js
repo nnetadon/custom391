@@ -86,6 +86,8 @@ function initBanSystem() {
                 url += `&player_name=${encodeURIComponent(searchQuery)}`;
             }
         }
+
+        console.log('Requesting URL:', url); // Отладочный вывод
         
         $.ajax({
             url: url,
@@ -96,6 +98,8 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
+                console.log('API Response:', response); // Отладочный вывод
+
                 if (!response || !response.results || !Array.isArray(response.results)) {
                     console.error('Invalid response format:', response);
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
@@ -112,17 +116,34 @@ function initBanSystem() {
                     return;
                 }
 
+                // Проверяем структуру первого бана для отладки
+                if (response.results.length > 0) {
+                    console.log('First ban structure:', response.results[0]);
+                }
+
                 displayBans(response.results);
                 
-                // Правильно вычисляем общее количество страниц
-                const totalItems = response.total || response.count || 0;
-                const totalPages = Math.ceil(totalItems / window.banSystem.itemsPerPage);
+                // Получаем общее количество элементов и страниц
+                const totalItems = parseInt(response.total) || parseInt(response.count) || response.results.length;
+                const totalPages = Math.max(1, Math.ceil(totalItems / window.banSystem.itemsPerPage));
                 
+                console.log('Pagination info:', {
+                    totalItems,
+                    itemsPerPage: window.banSystem.itemsPerPage,
+                    totalPages,
+                    currentPage: page
+                });
+
                 updatePagination(page, totalPages);
                 $('#totalBans').text(`Всего банов: ${totalItems}`);
             },
             error: function(xhr, status, error) {
-                console.error('Error loading bans:', error);
+                console.error('Error loading bans:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    error: error,
+                    response: xhr.responseText
+                });
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
@@ -155,8 +176,14 @@ function initBanSystem() {
                 </div>
             `);
 
-            // Получаем название сервера
-            const serverName = serverNames[ban.for_server_id] || `Сервер ${ban.for_server_id}`;
+            // Логируем данные о сервере для отладки
+            console.log('Ban server info:', {
+                banId: ban.id,
+                serverId: ban.for_server_id,
+                serverName: serverNames[ban.for_server_id]
+            });
+
+            const serverName = serverNames[ban.for_server_id] || `Сервер ${ban.for_server_id || 'неизвестен'}`;
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
@@ -188,11 +215,15 @@ function initBanSystem() {
         const pagination = $('#pagination');
         pagination.empty();
 
-        totalPages = parseInt(totalPages) || 1;
-        if (totalPages <= 0) totalPages = 1;
+        console.log('Updating pagination:', { currentPage, totalPages }); // Отладочный вывод
+
+        // Проверяем, что totalPages является числом и больше 0
+        totalPages = Math.max(1, parseInt(totalPages) || 1);
+        currentPage = parseInt(currentPage) || 0;
 
         const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
 
+        // Кнопки навигации
         const firstBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
             .prop('disabled', currentPage === 0)
@@ -223,37 +254,6 @@ function initBanSystem() {
 
         paginationContainer.append(firstBtn, prevBtn, pageInfo, nextBtn, lastBtn);
         pagination.append(paginationContainer);
-
-        const paginationStyles = `
-            <style>
-                .pagination-container {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-                .pagination-container button {
-                    padding: 0.5rem 1rem;
-                    border-radius: 0.25rem;
-                    transition: all 0.2s;
-                }
-                .pagination-container button:not(:disabled):hover {
-                    background-color: #6c757d;
-                    color: white;
-                }
-                .pagination-container .bg-light {
-                    background-color: #f8f9fa;
-                    border: 1px solid #dee2e6;
-                }
-            </style>
-        `;
-        
-        if (!document.querySelector('#paginationStyles')) {
-            const styleElement = $('<div>')
-                .attr('id', 'paginationStyles')
-                .html(paginationStyles);
-            $('head').append(styleElement);
-        }
     }
 
     function initSearch() {
