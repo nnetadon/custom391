@@ -74,6 +74,22 @@ function initBanSystem() {
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
+        // Сначала получаем общее количество банов
+        $.ajax({
+            url: `${API_URL}/stats`,
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'x-api-key': API_KEY,
+                'x-public-api-key': PUBLIC_API_KEY
+            },
+            success: function(statsResponse) {
+                const totalBans = statsResponse.total_bans || 0;
+                $('#totalBans').text(`Всего банов: ${totalBans}`);
+            }
+        });
+
+        // Загружаем страницу банов
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
         let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
@@ -88,8 +104,6 @@ function initBanSystem() {
             }
         }
 
-        console.log('Loading bans:', { url, page });
-
         $.ajax({
             url: url,
             method: 'GET',
@@ -99,8 +113,6 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
-                console.log('API response:', response);
-
                 if (!response || !response.results || !Array.isArray(response.results)) {
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
                     return;
@@ -111,7 +123,6 @@ function initBanSystem() {
                         `Игрок "${searchQuery}" не найден в списке заблокированных` : 
                         'Нет активных банов';
                     $('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
-                    $('#totalBans').text('Всего банов: 0');
                     $('#pagination').empty();
                     return;
                 }
@@ -122,14 +133,6 @@ function initBanSystem() {
                 const hasMorePages = response.results.length >= 10;
                 const estimatedTotalPages = hasMorePages ? Math.max(2, page + 2) : Math.max(1, page + 1);
                 
-                console.log('Pagination calculation:', {
-                    resultsLength: response.results.length,
-                    hasMorePages,
-                    estimatedTotalPages,
-                    currentPage: page
-                });
-
-                $('#totalBans').text(`Всего банов: ${response.results.length * estimatedTotalPages}`);
                 updatePagination(page, estimatedTotalPages);
             },
             error: function(xhr, status, error) {
@@ -204,77 +207,26 @@ function initBanSystem() {
 
         const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
 
-        // Кнопка в начало
-        const firstBtn = $('<button>')
-            .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage <= 0)
-            .html('<i class="bi bi-chevron-double-left"></i>')
-            .click(() => loadBans(0));
-
-        // Кнопка назад
+        // Кнопка "Назад"
         const prevBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
             .prop('disabled', currentPage <= 0)
-            .html('<i class="bi bi-chevron-left"></i>')
+            .html('<i class="bi bi-chevron-left"></i> Назад')
             .click(() => loadBans(currentPage - 1));
 
-        // Добавляем кнопки с номерами страниц
-        const pageButtons = $('<div>').addClass('d-flex gap-1');
-        
-        // Функция для добавления кнопки страницы
-        const addPageButton = (pageNum) => {
-            const btn = $('<button>')
-                .addClass('btn')
-                .addClass(pageNum === currentPage ? 'btn-primary' : 'btn-outline-secondary')
-                .text(pageNum + 1)
-                .click(() => loadBans(pageNum));
-            pageButtons.append(btn);
-        };
+        // Информация о текущей странице
+        const pageInfo = $('<span>')
+            .addClass('px-3 py-2 rounded bg-light')
+            .text(`Страница ${currentPage + 1} из ${totalPages}`);
 
-        // Показываем максимум 5 страниц
-        const maxVisiblePages = 5;
-        let startPage = Math.max(0, Math.min(currentPage - Math.floor(maxVisiblePages / 2), totalPages - maxVisiblePages));
-        let endPage = Math.min(startPage + maxVisiblePages, totalPages);
-
-        // Если мы в конце, сдвигаем окно влево
-        if (endPage - startPage < maxVisiblePages) {
-            startPage = Math.max(0, endPage - maxVisiblePages);
-        }
-
-        // Добавляем многоточие в начале если нужно
-        if (startPage > 0) {
-            pageButtons.append(
-                $('<span>').addClass('px-2 py-1').text('...')
-            );
-        }
-
-        // Добавляем кнопки страниц
-        for (let i = startPage; i < endPage; i++) {
-            addPageButton(i);
-        }
-
-        // Добавляем многоточие в конце если нужно
-        if (endPage < totalPages) {
-            pageButtons.append(
-                $('<span>').addClass('px-2 py-1').text('...')
-            );
-        }
-
-        // Кнопка вперед
+        // Кнопка "Вперед"
         const nextBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
             .prop('disabled', currentPage >= totalPages - 1)
-            .html('<i class="bi bi-chevron-right"></i>')
+            .html('Вперед <i class="bi bi-chevron-right"></i>')
             .click(() => loadBans(currentPage + 1));
 
-        // Кнопка в конец
-        const lastBtn = $('<button>')
-            .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage >= totalPages - 1)
-            .html('<i class="bi bi-chevron-double-right"></i>')
-            .click(() => loadBans(totalPages - 1));
-
-        paginationContainer.append(firstBtn, prevBtn, pageButtons, nextBtn, lastBtn);
+        paginationContainer.append(prevBtn, pageInfo, nextBtn);
         pagination.append(paginationContainer);
     }
 
