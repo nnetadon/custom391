@@ -74,22 +74,6 @@ function initBanSystem() {
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
-        // Сначала получаем общее количество банов
-        $.ajax({
-            url: `${API_URL}/stats`,
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'x-api-key': API_KEY,
-                'x-public-api-key': PUBLIC_API_KEY
-            },
-            success: function(statsResponse) {
-                const totalBans = statsResponse.total_bans || 0;
-                $('#totalBans').text(`Всего банов: ${totalBans}`);
-            }
-        });
-
-        // Загружаем страницу банов
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
         let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
@@ -104,6 +88,26 @@ function initBanSystem() {
             }
         }
 
+        $.ajax({
+            url: `${API_URL}/stats`,
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'x-api-key': API_KEY,
+                'x-public-api-key': PUBLIC_API_KEY
+            },
+            success: function(statsResponse) {
+                if (statsResponse && statsResponse.total_bans) {
+                    window.banSystem.totalBans = statsResponse.total_bans;
+                }
+            },
+            complete: function() {
+                loadBansPage(url, page, searchQuery);
+            }
+        });
+    }
+
+    function loadBansPage(url, page, searchQuery) {
         $.ajax({
             url: url,
             method: 'GET',
@@ -129,11 +133,9 @@ function initBanSystem() {
 
                 displayBans(response.results);
                 
-                // Если на странице 10 результатов, значит есть еще страницы
-                const hasMorePages = response.results.length >= 10;
-                const estimatedTotalPages = hasMorePages ? Math.max(2, page + 2) : Math.max(1, page + 1);
+                const totalPages = Math.ceil(window.banSystem.totalBans / 10);
                 
-                updatePagination(page, estimatedTotalPages);
+                updatePagination(page, totalPages);
             },
             error: function(xhr, status, error) {
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
@@ -205,29 +207,33 @@ function initBanSystem() {
         currentPage = parseInt(currentPage);
         totalPages = parseInt(totalPages);
 
-        const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
+        const container = $('<div>').addClass('d-flex flex-column align-items-start gap-2');
 
-        // Кнопка "Назад"
+        const infoRow = $('<div>')
+            .addClass('d-flex justify-content-between w-100')
+            .append(
+                $('<span>').text(`Найдены ${window.banSystem.totalBans || '0'} бана`),
+                $('<span>').text(`Страница ${currentPage + 1} из ${totalPages}`)
+            );
+
+        const buttonsRow = $('<div>')
+            .addClass('d-flex gap-2 align-items-center');
+
         const prevBtn = $('<button>')
-            .addClass('btn btn-outline-secondary')
+            .addClass('btn btn-dark')
             .prop('disabled', currentPage <= 0)
-            .html('<i class="bi bi-chevron-left"></i> Назад')
+            .text('Назад')
             .click(() => loadBans(currentPage - 1));
 
-        // Информация о текущей странице
-        const pageInfo = $('<span>')
-            .addClass('px-3 py-2 rounded bg-light')
-            .text(`Страница ${currentPage + 1} из ${totalPages}`);
-
-        // Кнопка "Вперед"
         const nextBtn = $('<button>')
-            .addClass('btn btn-outline-secondary')
+            .addClass('btn btn-dark')
             .prop('disabled', currentPage >= totalPages - 1)
-            .html('Вперед <i class="bi bi-chevron-right"></i>')
+            .text('Вперед')
             .click(() => loadBans(currentPage + 1));
 
-        paginationContainer.append(prevBtn, pageInfo, nextBtn);
-        pagination.append(paginationContainer);
+        buttonsRow.append(prevBtn, nextBtn);
+        container.append(infoRow, buttonsRow);
+        pagination.append(container);
     }
 
     function initSearch() {
