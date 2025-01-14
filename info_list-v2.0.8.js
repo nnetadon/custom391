@@ -6,6 +6,12 @@ window.banSystem = {
     itemsPerPage: 10
 };
 
+const serverNames = {
+    '6364': 'Combat Arenas | Targets | Aimbot',
+    '6367': 'Wartune #2 SOLO',
+    '6369': 'Wartune #3 MAX 3'
+};
+
 function initBanSystem() {
     const API_URL = 'https://court.rustapp.io/public/bans';
     const SERVERS_API_URL = 'https://court.rustapp.io/public/servers';
@@ -29,12 +35,6 @@ function initBanSystem() {
                     value: '',
                     text: 'Все сервера'
                 }));
-
-                const serverNames = {
-                    '6364': 'Combat Arenas | Targets | Aimbot',
-                    '6367': 'Wartune #2 SOLO',
-                    '6369': 'Wartune #3 MAX 3'
-                };
 
                 response.forEach(server => {
                     if (server.id === '6266' || server.id === 6266) return;
@@ -155,9 +155,11 @@ function initBanSystem() {
                 </div>
             `);
 
+            const serverName = serverNames[ban.server_id] || `Сервер ${ban.server_id}`;
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
+                <div class="text-muted small">Сервер: ${serverName}</div>
             `);
 
             const locationCell = $('<td>').html(`
@@ -188,28 +190,69 @@ function initBanSystem() {
         totalPages = parseInt(totalPages) || 1;
         if (totalPages <= 0) totalPages = 1;
 
-        if (totalPages <= 1) {
-            pagination.empty();
-            return;
-        }
+        const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
+
+        const firstBtn = $('<button>')
+            .addClass('btn btn-outline-secondary')
+            .prop('disabled', currentPage === 0)
+            .html('<i class="bi bi-chevron-double-left"></i>')
+            .click(() => loadBans(0));
 
         const prevBtn = $('<button>')
-            .addClass('btn btn-outline-secondary me-2')
+            .addClass('btn btn-outline-secondary')
             .prop('disabled', currentPage === 0)
             .html('<i class="bi bi-chevron-left"></i>')
             .click(() => loadBans(currentPage - 1));
 
+        const pageInfo = $('<span>')
+            .addClass('px-3 py-2 rounded bg-light')
+            .text(`Страница ${currentPage + 1} из ${totalPages}`);
+
         const nextBtn = $('<button>')
-            .addClass('btn btn-outline-secondary ms-2')
+            .addClass('btn btn-outline-secondary')
             .prop('disabled', currentPage >= totalPages - 1)
             .html('<i class="bi bi-chevron-right"></i>')
             .click(() => loadBans(currentPage + 1));
 
-        const pageInfo = $('<span>')
+        const lastBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .text(`Страница ${currentPage + 1} из ${totalPages}`);
+            .prop('disabled', currentPage >= totalPages - 1)
+            .html('<i class="bi bi-chevron-double-right"></i>')
+            .click(() => loadBans(totalPages - 1));
 
-        pagination.append(prevBtn, pageInfo, nextBtn);
+        paginationContainer.append(firstBtn, prevBtn, pageInfo, nextBtn, lastBtn);
+        pagination.append(paginationContainer);
+
+        const paginationStyles = `
+            <style>
+                .pagination-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .pagination-container button {
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.25rem;
+                    transition: all 0.2s;
+                }
+                .pagination-container button:not(:disabled):hover {
+                    background-color: #6c757d;
+                    color: white;
+                }
+                .pagination-container .bg-light {
+                    background-color: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                }
+            </style>
+        `;
+        
+        if (!document.querySelector('#paginationStyles')) {
+            const styleElement = $('<div>')
+                .attr('id', 'paginationStyles')
+                .html(paginationStyles);
+            $('head').append(styleElement);
+        }
     }
 
     function initSearch() {
