@@ -2,7 +2,8 @@ window.banSystem = {
     initialized: false,
     currentPage: 0,
     isLoading: false,
-    currentServerId: '6364'
+    currentServerId: '',
+    itemsPerPage: 10
 };
 
 function initBanSystem() {
@@ -74,7 +75,7 @@ function initBanSystem() {
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        let url = `${API_URL}?sort_by=created&page=${page}`;
+        let url = `${API_URL}?sort_by=created&page=${page}&limit=${window.banSystem.itemsPerPage}`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
         }
@@ -184,7 +185,13 @@ function initBanSystem() {
         const pagination = $('#pagination');
         pagination.empty();
 
-        if (totalPages <= 1) return;
+        totalPages = parseInt(totalPages) || 1;
+        if (totalPages <= 0) totalPages = 1;
+
+        if (totalPages <= 1) {
+            pagination.empty();
+            return;
+        }
 
         const prevBtn = $('<button>')
             .addClass('btn btn-outline-secondary me-2')
@@ -200,7 +207,7 @@ function initBanSystem() {
 
         const pageInfo = $('<span>')
             .addClass('btn btn-outline-secondary')
-            .text('Страница ' + (currentPage + 1) + ' из ' + totalPages);
+            .text(`Страница ${currentPage + 1} из ${totalPages}`);
 
         pagination.append(prevBtn, pageInfo, nextBtn);
     }
