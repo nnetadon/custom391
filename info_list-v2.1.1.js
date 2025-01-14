@@ -75,7 +75,7 @@ function initBanSystem() {
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        let url = `${API_URL}?sort_by=created&page=${page}&limit=${window.banSystem.itemsPerPage}`;
+        let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
         }
@@ -116,34 +116,16 @@ function initBanSystem() {
                     return;
                 }
 
-                // Проверяем структуру первого бана для отладки
-                if (response.results.length > 0) {
-                    console.log('First ban structure:', response.results[0]);
-                }
-
                 displayBans(response.results);
                 
-                // Получаем общее количество элементов и страниц
-                const totalItems = parseInt(response.total) || parseInt(response.count) || response.results.length;
-                const totalPages = Math.max(1, Math.ceil(totalItems / window.banSystem.itemsPerPage));
+                const totalBans = parseInt(response.total);
+                const totalPages = Math.ceil(totalBans / 10);
                 
-                console.log('Pagination info:', {
-                    totalItems,
-                    itemsPerPage: window.banSystem.itemsPerPage,
-                    totalPages,
-                    currentPage: page
-                });
-
                 updatePagination(page, totalPages);
-                $('#totalBans').text(`Всего банов: ${totalItems}`);
+                $('#totalBans').text(`Всего банов: ${totalBans}`);
             },
             error: function(xhr, status, error) {
-                console.error('Error loading bans:', {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    error: error,
-                    response: xhr.responseText
-                });
+                console.error('Error loading bans:', error);
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
@@ -176,14 +158,9 @@ function initBanSystem() {
                 </div>
             `);
 
-            // Логируем данные о сервере для отладки
-            console.log('Ban server info:', {
-                banId: ban.id,
-                serverId: ban.for_server_id,
-                serverName: serverNames[ban.for_server_id]
-            });
-
-            const serverName = serverNames[ban.for_server_id] || `Сервер ${ban.for_server_id || 'неизвестен'}`;
+            const serverId = ban.server_id || ban.for_server_id;
+            const serverName = serverNames[serverId] || (serverId ? `Сервер ${serverId}` : 'Все сервера');
+            
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
@@ -217,40 +194,38 @@ function initBanSystem() {
 
         console.log('Updating pagination:', { currentPage, totalPages }); // Отладочный вывод
 
-        // Проверяем, что totalPages является числом и больше 0
-        totalPages = Math.max(1, parseInt(totalPages) || 1);
-        currentPage = parseInt(currentPage) || 0;
+        const totalPagesInt = Math.max(1, parseInt(totalPages) || 1);
+        const currentPageInt = parseInt(currentPage) || 0;
 
         const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
 
-        // Кнопки навигации
         const firstBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage === 0)
+            .prop('disabled', currentPageInt === 0)
             .html('<i class="bi bi-chevron-double-left"></i>')
             .click(() => loadBans(0));
 
         const prevBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage === 0)
+            .prop('disabled', currentPageInt === 0)
             .html('<i class="bi bi-chevron-left"></i>')
-            .click(() => loadBans(currentPage - 1));
+            .click(() => loadBans(currentPageInt - 1));
 
         const pageInfo = $('<span>')
             .addClass('px-3 py-2 rounded bg-light')
-            .text(`Страница ${currentPage + 1} из ${totalPages}`);
+            .text(`Страница ${currentPageInt + 1} из ${totalPagesInt}`);
 
         const nextBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage >= totalPages - 1)
+            .prop('disabled', currentPageInt >= totalPagesInt - 1)
             .html('<i class="bi bi-chevron-right"></i>')
-            .click(() => loadBans(currentPage + 1));
+            .click(() => loadBans(currentPageInt + 1));
 
         const lastBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPage >= totalPages - 1)
+            .prop('disabled', currentPageInt >= totalPagesInt - 1)
             .html('<i class="bi bi-chevron-double-right"></i>')
-            .click(() => loadBans(totalPages - 1));
+            .click(() => loadBans(totalPagesInt - 1));
 
         paginationContainer.append(firstBtn, prevBtn, pageInfo, nextBtn, lastBtn);
         pagination.append(paginationContainer);
