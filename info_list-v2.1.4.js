@@ -199,11 +199,8 @@ function initBanSystem() {
         const pagination = $('#pagination');
         pagination.empty();
 
-        // Проверяем и конвертируем значения
         currentPage = parseInt(currentPage);
         totalPages = parseInt(totalPages);
-
-        console.log('Pagination values:', { currentPage, totalPages });
 
         const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
 
@@ -221,10 +218,47 @@ function initBanSystem() {
             .html('<i class="bi bi-chevron-left"></i>')
             .click(() => loadBans(currentPage - 1));
 
-        // Информация о текущей странице
-        const pageInfo = $('<span>')
-            .addClass('px-3 py-2 rounded bg-light')
-            .text(`Страница ${currentPage + 1} из ${totalPages}`);
+        // Добавляем кнопки с номерами страниц
+        const pageButtons = $('<div>').addClass('d-flex gap-1');
+        
+        // Функция для добавления кнопки страницы
+        const addPageButton = (pageNum) => {
+            const btn = $('<button>')
+                .addClass('btn')
+                .addClass(pageNum === currentPage ? 'btn-primary' : 'btn-outline-secondary')
+                .text(pageNum + 1)
+                .click(() => loadBans(pageNum));
+            pageButtons.append(btn);
+        };
+
+        // Показываем максимум 5 страниц
+        const maxVisiblePages = 5;
+        let startPage = Math.max(0, Math.min(currentPage - Math.floor(maxVisiblePages / 2), totalPages - maxVisiblePages));
+        let endPage = Math.min(startPage + maxVisiblePages, totalPages);
+
+        // Если мы в конце, сдвигаем окно влево
+        if (endPage - startPage < maxVisiblePages) {
+            startPage = Math.max(0, endPage - maxVisiblePages);
+        }
+
+        // Добавляем многоточие в начале если нужно
+        if (startPage > 0) {
+            pageButtons.append(
+                $('<span>').addClass('px-2 py-1').text('...')
+            );
+        }
+
+        // Добавляем кнопки страниц
+        for (let i = startPage; i < endPage; i++) {
+            addPageButton(i);
+        }
+
+        // Добавляем многоточие в конце если нужно
+        if (endPage < totalPages) {
+            pageButtons.append(
+                $('<span>').addClass('px-2 py-1').text('...')
+            );
+        }
 
         // Кнопка вперед
         const nextBtn = $('<button>')
@@ -240,7 +274,7 @@ function initBanSystem() {
             .html('<i class="bi bi-chevron-double-right"></i>')
             .click(() => loadBans(totalPages - 1));
 
-        paginationContainer.append(firstBtn, prevBtn, pageInfo, nextBtn, lastBtn);
+        paginationContainer.append(firstBtn, prevBtn, pageButtons, nextBtn, lastBtn);
         pagination.append(paginationContainer);
     }
 
