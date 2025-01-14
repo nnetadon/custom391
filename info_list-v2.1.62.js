@@ -67,16 +67,13 @@ function initBanSystem() {
     }
 
     function loadBans(page, searchQuery = '') {
-        if (window.banSystem.isLoading) {
-            return;
-        }
+        if (window.banSystem.isLoading) return;
 
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        // Формируем URL для получения банов
         let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
@@ -89,59 +86,42 @@ function initBanSystem() {
             }
         }
 
-        // Получаем общее количество банов
         $.ajax({
-            url: `${API_URL}/count`,
+            url: url,
             method: 'GET',
             headers: {
                 'accept': 'application/json',
                 'x-api-key': API_KEY,
                 'x-public-api-key': PUBLIC_API_KEY
             },
-            success: function(countResponse) {
-                if (countResponse && typeof countResponse.count === 'number') {
-                    window.banSystem.totalBans = countResponse.count;
+            success: function(response) {
+                if (!response || !response.results || !Array.isArray(response.results)) {
+                    $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
+                    return;
                 }
+                
+                if (response.results.length === 0) {
+                    const searchMessage = searchQuery ? 
+                        `Игрок "${searchQuery}" не найден в списке заблокированных` : 
+                        'Нет активных банов';
+                    $('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
+                    $('#pagination').empty();
+                    return;
+                }
+
+                displayBans(response.results);
+                
+                // Если получили 10 результатов, значит есть следующая страница
+                const hasNextPage = response.results.length >= 10;
+                const totalPages = hasNextPage ? page + 2 : page + 1;
+                
+                updatePagination(page, totalPages);
+            },
+            error: function(xhr, status, error) {
+                $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
-                // Загружаем страницу банов
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    headers: {
-                        'accept': 'application/json',
-                        'x-api-key': API_KEY,
-                        'x-public-api-key': PUBLIC_API_KEY
-                    },
-                    success: function(response) {
-                        if (!response || !response.results || !Array.isArray(response.results)) {
-                            $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
-                            return;
-                        }
-                        
-                        if (response.results.length === 0) {
-                            const searchMessage = searchQuery ? 
-                                `Игрок "${searchQuery}" не найден в списке заблокированных` : 
-                                'Нет активных банов';
-                            $('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
-                            $('#pagination').empty();
-                            return;
-                        }
-
-                        displayBans(response.results);
-                        
-                        // Вычисляем количество страниц на основе общего количества банов
-                        const totalPages = Math.max(1, Math.ceil(window.banSystem.totalBans / 10));
-                        
-                        updatePagination(page, totalPages);
-                    },
-                    error: function(xhr, status, error) {
-                        $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
-                    },
-                    complete: function() {
-                        window.banSystem.isLoading = false;
-                    }
-                });
+                window.banSystem.isLoading = false;
             }
         });
     }
@@ -207,14 +187,13 @@ function initBanSystem() {
         currentPage = parseInt(currentPage);
         totalPages = parseInt(totalPages);
 
-        // Контейнер с правильными отступами
         const container = $('<div>')
             .addClass('d-flex justify-content-between align-items-center w-100 mb-3');
 
         // Информация о банах
         const infoText = $('<div>')
             .addClass('me-3')
-            .text(`Найдены ${window.banSystem.totalBans || '0'} бана`);
+            .text(`Найдены ${response.total || response.results.length} бана`);
 
         // Правая часть с пагинацией
         const paginationRight = $('<div>')
@@ -241,7 +220,6 @@ function initBanSystem() {
             .text('Вперед')
             .click(() => loadBans(currentPage + 1));
 
-        // Собираем все вместе
         buttonsContainer.append(prevBtn, nextBtn);
         paginationRight.append(pageText, buttonsContainer);
         container.append(infoText, paginationRight);
