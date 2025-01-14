@@ -67,37 +67,15 @@ function initBanSystem() {
     }
 
     function loadBans(page, searchQuery = '') {
-        if (window.banSystem.isLoading) return;
+        if (window.banSystem.isLoading) {
+            return;
+        }
 
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        const countUrl = `${API_URL}/count`;
-        if (window.banSystem.currentServerId) {
-            countUrl += `?for_server_id=${window.banSystem.currentServerId}`;
-        }
-        
-        $.ajax({
-            url: countUrl,
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'x-api-key': API_KEY,
-                'x-public-api-key': PUBLIC_API_KEY
-            },
-            success: function(countResponse) {
-                window.banSystem.totalBans = countResponse.total || 0;
-                loadBansPage(page, searchQuery);
-            },
-            error: function() {
-                loadBansPage(page, searchQuery);
-            }
-        });
-    }
-
-    function loadBansPage(page, searchQuery = '') {
         let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
@@ -109,7 +87,9 @@ function initBanSystem() {
                 url += `&player_name=${encodeURIComponent(searchQuery)}`;
             }
         }
-        
+
+        console.log('Loading bans:', { url, page });
+
         $.ajax({
             url: url,
             method: 'GET',
@@ -119,6 +99,8 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
+                console.log('API response:', response);
+
                 if (!response || !response.results || !Array.isArray(response.results)) {
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
                     return;
@@ -136,11 +118,19 @@ function initBanSystem() {
 
                 displayBans(response.results);
                 
-                const totalBans = window.banSystem.totalBans || response.results.length;
-                const totalPages = Math.max(1, Math.ceil(totalBans / 10));
+                // Если на странице 10 результатов, значит есть еще страницы
+                const hasMorePages = response.results.length >= 10;
+                const estimatedTotalPages = hasMorePages ? Math.max(2, page + 2) : Math.max(1, page + 1);
                 
-                $('#totalBans').text(`Всего банов: ${totalBans}`);
-                updatePagination(page, totalPages);
+                console.log('Pagination calculation:', {
+                    resultsLength: response.results.length,
+                    hasMorePages,
+                    estimatedTotalPages,
+                    currentPage: page
+                });
+
+                $('#totalBans').text(`Всего банов: ${response.results.length * estimatedTotalPages}`);
+                updatePagination(page, estimatedTotalPages);
             },
             error: function(xhr, status, error) {
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
@@ -209,38 +199,46 @@ function initBanSystem() {
         const pagination = $('#pagination');
         pagination.empty();
 
-        const totalPagesInt = Math.max(1, parseInt(totalPages) || 1);
-        const currentPageInt = parseInt(currentPage) || 0;
+        // Проверяем и конвертируем значения
+        currentPage = parseInt(currentPage);
+        totalPages = parseInt(totalPages);
+
+        console.log('Pagination values:', { currentPage, totalPages });
 
         const paginationContainer = $('<div>').addClass('pagination-container d-flex align-items-center gap-2');
 
+        // Кнопка в начало
         const firstBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPageInt === 0)
+            .prop('disabled', currentPage <= 0)
             .html('<i class="bi bi-chevron-double-left"></i>')
             .click(() => loadBans(0));
 
+        // Кнопка назад
         const prevBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPageInt === 0)
+            .prop('disabled', currentPage <= 0)
             .html('<i class="bi bi-chevron-left"></i>')
-            .click(() => loadBans(currentPageInt - 1));
+            .click(() => loadBans(currentPage - 1));
 
+        // Информация о текущей странице
         const pageInfo = $('<span>')
             .addClass('px-3 py-2 rounded bg-light')
-            .text(`Страница ${currentPageInt + 1} из ${totalPagesInt}`);
+            .text(`Страница ${currentPage + 1} из ${totalPages}`);
 
+        // Кнопка вперед
         const nextBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPageInt >= totalPagesInt - 1)
+            .prop('disabled', currentPage >= totalPages - 1)
             .html('<i class="bi bi-chevron-right"></i>')
-            .click(() => loadBans(currentPageInt + 1));
+            .click(() => loadBans(currentPage + 1));
 
+        // Кнопка в конец
         const lastBtn = $('<button>')
             .addClass('btn btn-outline-secondary')
-            .prop('disabled', currentPageInt >= totalPagesInt - 1)
+            .prop('disabled', currentPage >= totalPages - 1)
             .html('<i class="bi bi-chevron-double-right"></i>')
-            .click(() => loadBans(totalPagesInt - 1));
+            .click(() => loadBans(totalPages - 1));
 
         paginationContainer.append(firstBtn, prevBtn, pageInfo, nextBtn, lastBtn);
         pagination.append(paginationContainer);
