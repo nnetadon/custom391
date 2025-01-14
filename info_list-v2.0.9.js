@@ -113,16 +113,16 @@ function initBanSystem() {
                 }
 
                 displayBans(response.results);
-                updatePagination(response.page, response.total_pages || Math.ceil(response.total / response.limit));
-                $('#totalBans').text(`Всего банов: ${response.total || response.results.length}`);
+                
+                // Правильно вычисляем общее количество страниц
+                const totalItems = response.total || response.count || 0;
+                const totalPages = Math.ceil(totalItems / window.banSystem.itemsPerPage);
+                
+                updatePagination(page, totalPages);
+                $('#totalBans').text(`Всего банов: ${totalItems}`);
             },
             error: function(xhr, status, error) {
-                console.error('Error loading bans:', {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    responseText: xhr.responseText,
-                    error: error
-                });
+                console.error('Error loading bans:', error);
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
@@ -155,7 +155,8 @@ function initBanSystem() {
                 </div>
             `);
 
-            const serverName = serverNames[ban.server_id] || `Сервер ${ban.server_id}`;
+            // Получаем название сервера
+            const serverName = serverNames[ban.for_server_id] || `Сервер ${ban.for_server_id}`;
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
