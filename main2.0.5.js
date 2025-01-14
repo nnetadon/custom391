@@ -601,10 +601,10 @@ const updateTopUpModal = () => {
                 </div>
                 <div class="pay-start__bonus-finish"
                 <div class="pay-start__bonus-finish" style="display: flex;width: 100%;margin-top: -10px;padding: 15px;background: linear-gradient(rgb(0 0 0 / 60%), rgb(0 0 0 / 60%)), url(https://gspics.org/images/2025/01/14/IKB9Bi.webp);background-size: cover;background-position: center;background-repeat: no-repeat;background-color: rgb(255 184 0 / 10%);border-radius: 8px;flex-direction: column;height: 80px;">
-            <span style="display: block;color: #FFB800;margin-bottom: 5px;text-align: justify;">С бонусом к зачислению:</span>
+            <span style="display: block;color: var(--default-color);margin-bottom: 5px;text-align: justify;">С бонусом к зачислению:</span>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="bonus-amount" style="font-size: 18px; font-weight: bold;">0 ₽</span>
-                <div class="bonus-value" style="color: #FFB800;">+0 ₽</div>
+                <div class="bonus-value" style="color: var(--default-color);">+0 ₽</div>
             </div>
         </div>
         `
