@@ -3,7 +3,8 @@ window.banSystem = {
     currentPage: 0,
     isLoading: false,
     currentServerId: '',
-    itemsPerPage: 10
+    itemsPerPage: 10,
+    totalBans: 0
 };
 
 const serverNames = {
@@ -66,15 +67,37 @@ function initBanSystem() {
     }
 
     function loadBans(page, searchQuery = '') {
-        if (window.banSystem.isLoading) {
-            return;
-        }
+        if (window.banSystem.isLoading) return;
 
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
+        const countUrl = `${API_URL}/count`;
+        if (window.banSystem.currentServerId) {
+            countUrl += `?for_server_id=${window.banSystem.currentServerId}`;
+        }
+        
+        $.ajax({
+            url: countUrl,
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'x-api-key': API_KEY,
+                'x-public-api-key': PUBLIC_API_KEY
+            },
+            success: function(countResponse) {
+                window.banSystem.totalBans = countResponse.total || 0;
+                loadBansPage(page, searchQuery);
+            },
+            error: function() {
+                loadBansPage(page, searchQuery);
+            }
+        });
+    }
+
+    function loadBansPage(page, searchQuery = '') {
         let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
@@ -86,8 +109,6 @@ function initBanSystem() {
                 url += `&player_name=${encodeURIComponent(searchQuery)}`;
             }
         }
-
-        console.log('Requesting URL:', url); // Отладочный вывод
         
         $.ajax({
             url: url,
@@ -98,10 +119,7 @@ function initBanSystem() {
                 'x-public-api-key': PUBLIC_API_KEY
             },
             success: function(response) {
-                console.log('API Response:', response); // Отладочный вывод
-
                 if (!response || !response.results || !Array.isArray(response.results)) {
-                    console.error('Invalid response format:', response);
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
                     return;
                 }
@@ -118,14 +136,13 @@ function initBanSystem() {
 
                 displayBans(response.results);
                 
-                const totalBans = parseInt(response.total);
-                const totalPages = Math.ceil(totalBans / 10);
+                const totalBans = window.banSystem.totalBans || response.results.length;
+                const totalPages = Math.max(1, Math.ceil(totalBans / 10));
                 
-                updatePagination(page, totalPages);
                 $('#totalBans').text(`Всего банов: ${totalBans}`);
+                updatePagination(page, totalPages);
             },
             error: function(xhr, status, error) {
-                console.error('Error loading bans:', error);
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
@@ -191,8 +208,6 @@ function initBanSystem() {
     function updatePagination(currentPage, totalPages) {
         const pagination = $('#pagination');
         pagination.empty();
-
-        console.log('Updating pagination:', { currentPage, totalPages }); // Отладочный вывод
 
         const totalPagesInt = Math.max(1, parseInt(totalPages) || 1);
         const currentPageInt = parseInt(currentPage) || 0;
