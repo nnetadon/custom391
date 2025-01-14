@@ -2,16 +2,7 @@ window.banSystem = {
     initialized: false,
     currentPage: 0,
     isLoading: false,
-    currentServerId: '',
-    itemsPerPage: 10,
-    totalBans: 0,
-    totalPages: 0
-};
-
-const serverNames = {
-    '6364': 'Combat Arenas | Targets | Aimbot',
-    '6367': 'Wartune #2 SOLO',
-    '6369': 'Wartune #3 MAX 3'
+    currentServerId: '6364'
 };
 
 function initBanSystem() {
@@ -37,6 +28,12 @@ function initBanSystem() {
                     value: '',
                     text: 'Все сервера'
                 }));
+
+                const serverNames = {
+                    '6364': 'Combat Arenas | Targets | Aimbot',
+                    '6367': 'Wartune #2 SOLO',
+                    '6369': 'Wartune #3 MAX 3'
+                };
 
                 response.forEach(server => {
                     if (server.id === '6266' || server.id === 6266) return;
@@ -68,14 +65,16 @@ function initBanSystem() {
     }
 
     function loadBans(page, searchQuery = '') {
-        if (window.banSystem.isLoading) return;
+        if (window.banSystem.isLoading) {
+            return;
+        }
 
         window.banSystem.isLoading = true;
         window.banSystem.currentPage = page;
         
         $('#bansTableBody').html('<tr><td colspan="5" class="text-center">Загрузка данных...</td></tr>');
         
-        let url = `${API_URL}?sort_by=created&page=${page}&limit=10`;
+        let url = `${API_URL}?sort_by=created&page=${page}`;
         if (window.banSystem.currentServerId) {
             url += `&for_server_id=${window.banSystem.currentServerId}`;
         }
@@ -86,7 +85,7 @@ function initBanSystem() {
                 url += `&player_name=${encodeURIComponent(searchQuery)}`;
             }
         }
-
+        
         $.ajax({
             url: url,
             method: 'GET',
@@ -97,6 +96,7 @@ function initBanSystem() {
             },
             success: function(response) {
                 if (!response || !response.results || !Array.isArray(response.results)) {
+                    console.error('Invalid response format:', response);
                     $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка формата данных</td></tr>');
                     return;
                 }
@@ -106,38 +106,26 @@ function initBanSystem() {
                         `Игрок "${searchQuery}" не найден в списке заблокированных` : 
                         'Нет активных банов';
                     $('#bansTableBody').html(`<tr><td colspan="5" class="text-center">${searchMessage}</td></tr>`);
+                    $('#totalBans').text('Всего банов: 0');
                     $('#pagination').empty();
                     return;
                 }
 
                 displayBans(response.results);
-                
-                updatePagination(page);
+                updatePagination(response.page, response.total_pages || Math.ceil(response.total / response.limit));
+                $('#totalBans').text(`Всего банов: ${response.total || response.results.length}`);
             },
             error: function(xhr, status, error) {
+                console.error('Error loading bans:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
                 window.banSystem.isLoading = false;
-            }
-        });
-    }
-
-    function loadStats() {
-        $.ajax({
-            url: `${API_URL}/stats`,
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'x-api-key': API_KEY,
-                'x-public-api-key': PUBLIC_API_KEY
-            },
-            success: function(response) {
-                if (response && response.total_bans) {
-                    window.banSystem.totalBans = response.total_bans;
-                    window.banSystem.totalPages = Math.ceil(response.total_bans / 10);
-                    updatePagination(window.banSystem.currentPage);
-                }
             }
         });
     }
@@ -166,13 +154,9 @@ function initBanSystem() {
                 </div>
             `);
 
-            const serverId = ban.server_id || ban.for_server_id;
-            const serverName = serverNames[serverId] || (serverId ? `Сервер ${serverId}` : 'Все сервера');
-            
             const reasonCell = $('<td>').html(`
                 <div>${ban.reason}</div>
                 ${ban.comment ? `<div class="text-muted small">${ban.comment}</div>` : ''}
-                <div class="text-muted small">Сервер: ${serverName}</div>
             `);
 
             const locationCell = $('<td>').html(`
@@ -196,47 +180,29 @@ function initBanSystem() {
         });
     }
 
-    function updatePagination(currentPage) {
+    function updatePagination(currentPage, totalPages) {
         const pagination = $('#pagination');
         pagination.empty();
 
-        const container = $('<div>')
-            .addClass('d-flex justify-content-between align-items-center w-100 mb-3');
+        if (totalPages <= 1) return;
 
-        // Информация о банах
-        const infoText = $('<div>')
-            .addClass('me-3')
-            .text(`Найдены ${window.banSystem.totalBans} бана`);
-
-        // Правая часть с пагинацией
-        const paginationRight = $('<div>')
-            .addClass('d-flex align-items-center gap-3');
-
-        // Текст страницы
-        const pageText = $('<div>')
-            .text(`Страница ${currentPage + 1} из ${window.banSystem.totalPages}`);
-
-        // Контейнер для кнопок
-        const buttonsContainer = $('<div>')
-            .addClass('d-flex gap-2');
-
-        // Кнопки навигации
         const prevBtn = $('<button>')
-            .addClass('btn btn-dark px-4')
-            .prop('disabled', currentPage <= 0)
-            .text('Назад')
+            .addClass('btn btn-outline-secondary me-2')
+            .prop('disabled', currentPage === 0)
+            .html('<i class="bi bi-chevron-left"></i>')
             .click(() => loadBans(currentPage - 1));
 
         const nextBtn = $('<button>')
-            .addClass('btn btn-dark px-4')
-            .prop('disabled', currentPage >= window.banSystem.totalPages - 1)
-            .text('Вперед')
+            .addClass('btn btn-outline-secondary ms-2')
+            .prop('disabled', currentPage >= totalPages - 1)
+            .html('<i class="bi bi-chevron-right"></i>')
             .click(() => loadBans(currentPage + 1));
 
-        buttonsContainer.append(prevBtn, nextBtn);
-        paginationRight.append(pageText, buttonsContainer);
-        container.append(infoText, paginationRight);
-        pagination.append(container);
+        const pageInfo = $('<span>')
+            .addClass('btn btn-outline-secondary')
+            .text('Страница ' + (currentPage + 1) + ' из ' + totalPages);
+
+        pagination.append(prevBtn, pageInfo, nextBtn);
     }
 
     function initSearch() {
@@ -265,7 +231,6 @@ function initBanSystem() {
 
     loadServers();
     loadBans(window.banSystem.currentPage);
-    loadStats();
     initSearch();
 }
 
