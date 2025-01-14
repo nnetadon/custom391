@@ -4,7 +4,8 @@ window.banSystem = {
     isLoading: false,
     currentServerId: '',
     itemsPerPage: 10,
-    totalBans: 0
+    totalBans: 0,
+    totalPages: 0
 };
 
 const serverNames = {
@@ -111,17 +112,32 @@ function initBanSystem() {
 
                 displayBans(response.results);
                 
-                // Если получили 10 результатов, значит есть следующая страница
-                const hasNextPage = response.results.length >= 10;
-                const totalPages = hasNextPage ? page + 2 : page + 1;
-                
-                updatePagination(page, totalPages);
+                updatePagination(page);
             },
             error: function(xhr, status, error) {
                 $('#bansTableBody').html('<tr><td colspan="5" class="text-center text-danger">Ошибка загрузки данных</td></tr>');
             },
             complete: function() {
                 window.banSystem.isLoading = false;
+            }
+        });
+    }
+
+    function loadStats() {
+        $.ajax({
+            url: `${API_URL}/stats`,
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'x-api-key': API_KEY,
+                'x-public-api-key': PUBLIC_API_KEY
+            },
+            success: function(response) {
+                if (response && response.total_bans) {
+                    window.banSystem.totalBans = response.total_bans;
+                    window.banSystem.totalPages = Math.ceil(response.total_bans / 10);
+                    updatePagination(window.banSystem.currentPage);
+                }
             }
         });
     }
@@ -180,12 +196,9 @@ function initBanSystem() {
         });
     }
 
-    function updatePagination(currentPage, totalPages) {
+    function updatePagination(currentPage) {
         const pagination = $('#pagination');
         pagination.empty();
-
-        currentPage = parseInt(currentPage);
-        totalPages = parseInt(totalPages);
 
         const container = $('<div>')
             .addClass('d-flex justify-content-between align-items-center w-100 mb-3');
@@ -193,7 +206,7 @@ function initBanSystem() {
         // Информация о банах
         const infoText = $('<div>')
             .addClass('me-3')
-            .text(`Найдены ${response.total || response.results.length} бана`);
+            .text(`Найдены ${window.banSystem.totalBans} бана`);
 
         // Правая часть с пагинацией
         const paginationRight = $('<div>')
@@ -201,7 +214,7 @@ function initBanSystem() {
 
         // Текст страницы
         const pageText = $('<div>')
-            .text(`Страница ${currentPage + 1} из ${totalPages}`);
+            .text(`Страница ${currentPage + 1} из ${window.banSystem.totalPages}`);
 
         // Контейнер для кнопок
         const buttonsContainer = $('<div>')
@@ -216,7 +229,7 @@ function initBanSystem() {
 
         const nextBtn = $('<button>')
             .addClass('btn btn-dark px-4')
-            .prop('disabled', currentPage >= totalPages - 1)
+            .prop('disabled', currentPage >= window.banSystem.totalPages - 1)
             .text('Вперед')
             .click(() => loadBans(currentPage + 1));
 
@@ -252,6 +265,7 @@ function initBanSystem() {
 
     loadServers();
     loadBans(window.banSystem.currentPage);
+    loadStats();
     initSearch();
 }
 
