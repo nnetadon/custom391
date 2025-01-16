@@ -2,7 +2,7 @@ const event = new CustomEvent("setCustomConfig");
   
 window.currency = '₽';
 window.zeroToFree = true;
-window.hideServerSelector = true; // Добавлен `window.`
+window.hideServerSelector = false; // Добавлен `window.`
 window.sidebarStoreToRight = true; // Добавлен `window.`
   
 window.dispatchEvent(event);
