@@ -467,7 +467,7 @@ const topUp = async (e) => {
         return
     }
 
-    if(isNaN(amount.value) || +amount.value < 1) {
+    if(isNaN(amount.value) || +amount.value < 100) {
         return
     }
 
