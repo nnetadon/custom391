@@ -9,11 +9,11 @@ window.dispatchEvent(event);
 // Функция для расчета бонуса
 // Таблица бонусных ставок
 const bonusRates = [
-    { amount: 500, percent: 2.0 },   // 30% для суммы до 500
-    { amount: 1000, percent: 2.0 }, // 35% для суммы до 1000
-    { amount: 2500, percent: 2.0 },  // 40% для суммы до 2500
-    { amount: 5000, percent: 2.0 }, // 45% для суммы до 5000
-    { amount: Infinity, percent: 2.0 }// 50% для всех остальных сумм
+    { amount: 500, percent: 1.0 },   // 30% для суммы до 500
+    { amount: 1000, percent: 1.0 }, // 35% для суммы до 1000
+    { amount: 2500, percent: 1.0 },  // 40% для суммы до 2500
+    { amount: 5000, percent: 1.0 }, // 45% для суммы до 5000
+    { amount: Infinity, percent: 1.0 }// 50% для всех остальных сумм
 ];
 
 function getBonusRate(amount) {
@@ -31,7 +31,7 @@ function calculateBonus(amount) {
 }
 
 // Функция анимированного подсчета
-function animateNumber(start, end, element, duration = 500) {
+function animateNumber(start, end, element, duration = 500, format = (value) => `${value} ₽`) {
     const startTime = performance.now();
     const difference = end - start;
     
@@ -43,7 +43,7 @@ function animateNumber(start, end, element, duration = 500) {
         const easeProgress = 1 - (1 - progress) * (1 - progress);
         
         const current = Math.round(start + difference * easeProgress);
-        element.textContent = `${current} ₽`;
+        element.textContent = format(current);
         
         if (progress < 1) {
             requestAnimationFrame(update);
@@ -67,9 +67,8 @@ function updateBonus(amount) {
         
         // Анимируем основную сумму
         animateNumber(currentAmount, amount, bonusAmountElement);
-        // Анимируем бонус
-        animateNumber(currentBonus, bonus, bonusValueElement);
-        bonusValueElement.textContent = `+${bonus} ₽`;
+        // Анимируем бонус с сохранением знака плюс
+        animateNumber(currentBonus, bonus, bonusValueElement, 500, (value) => `+${value} ₽`);
     }
     
     return bonus;
@@ -288,7 +287,7 @@ const interval = setInterval(() => {
 
 
 /* Виджет пополнение 10% + контакт админа */
-const eventEndDate = new Date('2025-01-11T23:59:59'); // Конец события
+const eventEndDate = new Date('2025-01-27T23:59:59'); // Конец события
 
 const headerInterval = setInterval(() => {  
     const lang = translateResource[getLang()]; 
@@ -376,7 +375,7 @@ const translateResource = {
         "note": "⚠️ Бонусы при пополнении скинами могут быть как больше так и меньше (Зависит от скинов)!",
         "skinsdonate": "Скинами",
         "tgpromo": "Промокоды можно найти только в нашем Telegram канале",
-        "discount": "Рождественские скидки!",
+        "discount": "АКЦИЯ - БОНУС Х2 К ПОПОЛНЕНИЮ",
         "discount2": "Если вы наблюдаете проблемы с пополнением баланса - обратитесь через Discord к администратору KirillRND в личные сообщения ",
         "discountlink": "ссылка на наш канал",
         "copy": "Копировать",
@@ -633,23 +632,23 @@ const updateTopUpModal = () => {
                     </div>
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <button onclick="setAmount(500)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+30%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
                             <span style="display: block; margin-top: 4px;">500 ₽</span>
                         </button>
                         <button onclick="setAmount(1000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+35%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
                             <span style="display: block; margin-top: 4px;">1000 ₽</span>
                         </button>
                         <button onclick="setAmount(2500)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+40%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
                             <span style="display: block; margin-top: 4px;">2500 ₽</span>
                         </button>
                         <button onclick="setAmount(5000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+45%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
                             <span style="display: block; margin-top: 4px;">5000 ₽</span>
                         </button>
                         <button onclick="setAmount(10000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+50%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
                             <span style="display: block; margin-top: 4px;">10000 ₽</span>
                         </button>
                     </div>
