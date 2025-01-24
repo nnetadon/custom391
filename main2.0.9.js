@@ -547,11 +547,11 @@ const selectPayment = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value >= 1 && target.getAttribute("data-method") !== "skins") {
+    if(+amount.value >= 100 && target.getAttribute("data-method") !== "skins") {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value < 1 && amount.value !== "") {
+    if(+amount.value < 100 && amount.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
@@ -564,11 +564,11 @@ const onChangeInput = (e) => {
     amountWrapper.classList.remove('customPayment_amount__error')
     topUpBtn.classList.remove('active')
 
-    if(+e.target.value >= 1 && prevMethod) {
+    if(+e.target.value >= 100 && prevMethod) {
         topUpBtn.classList.add('active')
     }
 
-    if(+e.target.value < 1 && e.target.value !== "") {
+    if((+e.target.value < 100 && e.target.value !== "") || isNaN(e.target.value)) {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
