@@ -364,7 +364,7 @@ const translateResource = {
     'RU': {
         "amountTitle": "Сумма",
         "amountPlaceholder": "Введите сумму",
-        "amountMustBeGreatThen100rubels": "Мин. сумма пополнения 1₽ для карт и СБП, 500₽ для криптовалюты",
+        "amountMustBeGreatThen100rubels": "Мин. сумма пополнения 100₽",
         "createPaymentRequestError": "Ошибка при выполнении запроса на создание ссылки оплаты. Попробуйте позже или сообщите администратору",
         "cardpay": "Карты",
         "sbp": "СБП",
@@ -433,7 +433,7 @@ const translateResource = {
 }
 
 const ppConfig = {
-    // apiDomain: 'https://paynow.dangerrust.ru'
+    apiDomain: 'https://paynow.dangerrust.ru'
 }
 
 let isPaymentLoading = false
@@ -466,11 +466,12 @@ const topUp = async (e) => {
         return
     }
 
-    if((method.getAttribute('data-method') === "card" || method.getAttribute('data-method') === "sbp") && (isNaN(amount.value) || +amount.value < 1)) {
+    if(isNaN(amount.value) || +amount.value < 100) {
         return
     }
 
-    if(method.getAttribute('data-method') === "crypto" && (isNaN(amount.value) || +amount.value < 500)) {
+    if(method.getAttribute('data-method') === "card" || method.getAttribute('data-method') === "sbp" || method.getAttribute('data-method') === "crypto") {
+        window.location.href = `/api/v1/player.donate?amount=${amount.value}`
         return
     }
 
@@ -545,19 +546,11 @@ const selectPayment = (e) => {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value >= 1 && target.getAttribute("data-method") !== "skins" && target.getAttribute("data-method") !== "crypto") {
+    if(+amount.value >= 100 && target.getAttribute("data-method") !== "skins") {
         topUpBtn.classList.add('active')
     }
 
-    if(+amount.value >= 500 && target.getAttribute("data-method") === "crypto") {
-        topUpBtn.classList.add('active')
-    }
-
-    if(+amount.value < 1 && amount.value !== "" && target.getAttribute("data-method") !== "crypto") {
-        amountWrapper.classList.add('customPayment_amount__error')
-    }
-
-    if(+amount.value < 500 && amount.value !== "" && target.getAttribute("data-method") === "crypto") {
+    if(+amount.value < 100 && amount.value !== "") {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
@@ -570,19 +563,11 @@ const onChangeInput = (e) => {
     amountWrapper.classList.remove('customPayment_amount__error')
     topUpBtn.classList.remove('active')
 
-    if(+e.target.value >= 1 && prevMethod && prevMethod.getAttribute("data-method") !== "crypto") {
+    if(+e.target.value >= 100 && prevMethod) {
         topUpBtn.classList.add('active')
     }
 
-    if(+e.target.value >= 500 && prevMethod && prevMethod.getAttribute("data-method") === "crypto") {
-        topUpBtn.classList.add('active')
-    }
-
-    if((+e.target.value < 1 && e.target.value !== "") || isNaN(e.target.value) && prevMethod.getAttribute("data-method") !== "crypto") {
-        amountWrapper.classList.add('customPayment_amount__error')
-    }
-
-    if((+e.target.value < 500 && e.target.value !== "") || isNaN(e.target.value) && prevMethod.getAttribute("data-method") === "crypto") {
+    if((+e.target.value < 100 && e.target.value !== "") || isNaN(e.target.value)) {
         amountWrapper.classList.add('customPayment_amount__error')
     }
 }
@@ -602,14 +587,14 @@ const updateTopUpModal = () => {
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
-                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path d="M8.78301 10.1665C9.10914 10.1665 9.33301 9.94264 9.33301 9.6665C9.33301 9.39037 9.10914 9.1665 8.83301 9.1665H7.33301V10.1665H8.83301Z"></path><path d="M7.33301 6.8335H8.83301C9.10914 6.8335 9.33301 7.05736 9.33301 7.3335C9.33301 7.60963 9.10914 7.8335 8.83301 7.8335H7.33301V6.8335Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1.33301 8.50016C1.33301 4.81826 4.31777 1.8335 7.99967 1.8335C11.6815 1.8335 14.6663 4.81826 14.6663 8.50016C14.6663 12.182 11.6815 15.1668 7.99967 15.1668C4.31777 15.1668 1.33301 12.182 1.33301 8.50016ZM5.66634 5.50016C5.29815 5.50016 4.99967 5.79864 4.99967 6.16683C4.99967 6.53502 5.29815 6.8335 5.66634 6.8335H5.99967V10.1668H5.66634C5.29815 10.1668 4.99967 10.4653 4.99967 10.8335C4.99967 11.2017 5.29815 11.5002 5.66634 11.5002H7.33301V11.8335C7.33301 12.2017 7.63147 12.5002 7.99967 12.5002C8.36787 12.5002 8.66634 12.2017 8.66634 11.8335V11.5002H8.83301C9.84554 11.5002 10.6663 10.6794 10.6663 9.66683C10.6663 9.22363 10.5091 8.81716 10.2473 8.50016C10.5091 8.18316 10.6663 7.7767 10.6663 7.3335C10.6663 6.32098 9.84554 5.50016 8.83301 5.50016H8.66634V5.16683C8.66634 4.79864 8.36787 4.50016 7.99967 4.50016C7.63147 4.50016 7.33301 4.79864 7.33301 5.16683V5.50016H5.66634Z"></path></svg>
+                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.33301 4.49984C1.33301 3.76346 1.92996 3.1665 2.66634 3.1665H10.6663C11.4027 3.1665 11.9997 3.76346 11.9997 4.49984V5.83317H13.333C14.0694 5.83317 14.6663 6.43012 14.6663 7.1665V12.4998C14.6663 13.2362 14.0694 13.8332 13.333 13.8332H5.33301C4.59663 13.8332 3.99967 13.2362 3.99967 12.4998V11.1665H2.66634C1.92996 11.1665 1.33301 10.5696 1.33301 9.83317V4.49984ZM5.33301 11.1665V12.4998H13.333V7.1665H11.9997V9.83317C11.9997 10.5696 11.4027 11.1665 10.6663 11.1665H5.33301ZM3.99967 6.49984C3.99967 6.13165 4.29815 5.83317 4.66634 5.83317H5.33301C5.70119 5.83317 5.99967 6.13165 5.99967 6.49984C5.99967 6.86802 5.70119 7.1665 5.33301 7.1665H4.66634C4.29815 7.1665 3.99967 6.86802 3.99967 6.49984Z"></path></svg>
                 <span class="customPayment_methodName">${t.cardpay}</span>
             </div>
             <div class="customPayment_method" data-method="sbp"><div class="payment-method__icon">RUB</div>
                 <div class="customPayment_methodCheckWrapper">
                     <svg class="customPayment_methodCheckIcon" data-v-a781e0d0="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 6.75L3 8L6.75 11.75L13 5.5L11.75 4.25L6.75 9.25L4.25 6.75Z"></path></svg>
                 </div>
-                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path d="M8.78301 10.1665C9.10914 10.1665 9.33301 9.94264 9.33301 9.6665C9.33301 9.39037 9.10914 9.1665 8.83301 9.1665H7.33301V10.1665H8.83301Z"></path><path d="M7.33301 6.8335H8.83301C9.10914 6.8335 9.33301 7.05736 9.33301 7.3335C9.33301 7.60963 9.10914 7.8335 8.83301 7.8335H7.33301V6.8335Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M1.33301 8.50016C1.33301 4.81826 4.31777 1.8335 7.99967 1.8335C11.6815 1.8335 14.6663 4.81826 14.6663 8.50016C14.6663 12.182 11.6815 15.1668 7.99967 15.1668C4.31777 15.1668 1.33301 12.182 1.33301 8.50016ZM5.66634 5.50016C5.29815 5.50016 4.99967 5.79864 4.99967 6.16683C4.99967 6.53502 5.29815 6.8335 5.66634 6.8335H5.99967V10.1668H5.66634C5.29815 10.1668 4.99967 10.4653 4.99967 10.8335C4.99967 11.2017 5.29815 11.5002 5.66634 11.5002H7.33301V11.8335C7.33301 12.2017 7.63147 12.5002 7.99967 12.5002C8.36787 12.5002 8.66634 12.2017 8.66634 11.8335V11.5002H8.83301C9.84554 11.5002 10.6663 10.6794 10.6663 9.66683C10.6663 9.22363 10.5091 8.81716 10.2473 8.50016C10.5091 8.18316 10.6663 7.7767 10.6663 7.3335C10.6663 6.32098 9.84554 5.50016 8.83301 5.50016H8.66634V5.16683C8.66634 4.79864 8.36787 4.50016 7.99967 4.50016C7.63147 4.50016 7.33301 4.79864 7.33301 5.16683V5.50016H5.66634Z"></path></svg>
+                <svg class="customPayment_methodIcon" data-v-a781e0d0="" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.78301 4.68713L8.79102 8.28699V6.56075L10.3198 5.62547L10.3206 5.62547L8.80032 4.69808L7.17969 1.78564L13.4379 5.62257L13.4486 5.62256L13.4433 5.62584L13.4492 5.62945L13.4373 5.62946L8.79142 8.47027L8.79155 8.52977L7.17969 7.52972V1.78564L8.78303 4.68713ZM2.55367 12.2862L2.55367 12.2872L2.55449 12.2857L7.17969 9.46011L7.18057 15.2128L7.17969 15.2144L7.18057 15.2139V15.2144L7.18099 15.2136L13.4296 11.3736L13.4393 11.3736L13.4344 11.3707L13.4393 11.3677L13.4296 11.3677L2.55176 4.7124L2.55367 12.284L2.55176 12.2874L2.55367 12.2862ZM4.1834 9.38466L5.62624 8.50252L4.1834 7.61903V9.38466ZM8.80725 12.299L7.2745 15.0446L8.79155 12.3022V10.4407L10.3188 11.3759L8.80725 12.299Z"></path></svg>
                 <span class="customPayment_methodName">${t.sbp}</span>
             </div>
             <div class="customPayment_method" data-method="crypto"><div class="payment-method__icon">EUR, P2P</div>
