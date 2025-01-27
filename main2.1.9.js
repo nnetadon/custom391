@@ -9,11 +9,11 @@ window.dispatchEvent(event);
 // Функция для расчета бонуса
 // Таблица бонусных ставок
 const bonusRates = [
-    { amount: 500, percent: 1.0 },   // 30% для суммы до 500
-    { amount: 1000, percent: 1.0 }, // 35% для суммы до 1000
-    { amount: 2500, percent: 1.0 },  // 40% для суммы до 2500
-    { amount: 5000, percent: 1.0 }, // 45% для суммы до 5000
-    { amount: Infinity, percent: 1.0 }// 50% для всех остальных сумм
+    { amount: 500, percent: 0.30 },   // 30% для суммы до 500
+    { amount: 1000, percent: 0.35 }, // 35% для суммы до 1000
+    { amount: 2500, percent: 0.40 },  // 40% для суммы до 2500
+    { amount: 5000, percent: 0.45 }, // 45% для суммы до 5000
+    { amount: Infinity, percent: 0.50 }// 50% для всех остальных сумм
 ];
 
 function getBonusRate(amount) {
@@ -632,23 +632,23 @@ const updateTopUpModal = () => {
                     </div>
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <button onclick="setAmount(500)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+30%</span>
                             <span style="display: block; margin-top: 4px;">500 ₽</span>
                         </button>
                         <button onclick="setAmount(1000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+35%</span>
                             <span style="display: block; margin-top: 4px;">1000 ₽</span>
                         </button>
                         <button onclick="setAmount(2500)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+40%</span>
                             <span style="display: block; margin-top: 4px;">2500 ₽</span>
                         </button>
                         <button onclick="setAmount(5000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+45%</span>
                             <span style="display: block; margin-top: 4px;">5000 ₽</span>
                         </button>
                         <button onclick="setAmount(10000)" class="bonus-btn">
-                            <span style="display: block; color: #FFB800; font-size: 14px;">+100%</span>
+                            <span style="display: block; color: #FFB800; font-size: 14px;">+50%</span>
                             <span style="display: block; margin-top: 4px;">10000 ₽</span>
                         </button>
                     </div>
