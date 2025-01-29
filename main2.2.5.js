@@ -310,7 +310,7 @@ const headerInterval = setInterval(() => {
                         <span id="time-display"></span> <!-- Таймер будет обновлен здесь -->
                     </p>
                 </div>
-		<img src="https://csgopq.run/img/promo-code-bg.webp" alt="Промокод" style="position: absolute;right: 0;bottom: 0;max-width: 8em;height: auto;z-index: 0;">
+		<img src="https://gspics.org/images/2025/01/29/IVKONh.png" alt="Промокод" style="position: absolute;right: 0;bottom: 0;max-width: 7em;height: auto;z-index: 0;">
             </div>`;
 
         headerContainer.insertAdjacentHTML('beforeend', noticeContainerHTML); // Добавляем основной контент
