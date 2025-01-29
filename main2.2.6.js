@@ -299,7 +299,6 @@ const headerInterval = setInterval(() => {
         // Создаем основной контент с вашим текстом и таймером
         const noticeContainerHTML = `
             <div class="notice-container">
-                <span class="notice-icon"><i class="fa--xf far fa-info" aria-hidden="true"></i></span>
                 <div class="notice-content">
                     <p align="center"><big><big>${lang.discount}</big></big></p>
                     <p align="center">${lang.discount2}</p>
