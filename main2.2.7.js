@@ -241,7 +241,10 @@ function main() {
 					<a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
                 </div>
 					<p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
-            </div>
+            				<p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD
+SUITE C, LEVEL 7, WORLD TRUST TOWER,
+50 STANLEY STREET, CENTRAL, HONG KONG</p>
+	    </div>
         `;
 
         // Вставка нового footer в нужное место на странице
