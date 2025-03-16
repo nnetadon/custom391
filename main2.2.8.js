@@ -169,10 +169,12 @@ function paynowMain() {
 }
 
 function main() {
+    // Инициализируем все необходимые события
     window.dispatchEvent(new CustomEvent("initState"));
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
+    window.dispatchEvent(new CustomEvent("initToastManager"));
 
-    // Проверка готовности приложения и вызов paynowMain
+    // Проверяем готовность приложения и вызываем paynowMain
     if (window.isAppReady) {
         paynowMain();
     } else {
@@ -181,96 +183,73 @@ function main() {
         });
     }
 
-    window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
-        const { player } = window.getState().player;
+    // Добавляем слушатели для компонентов
+    if (window.componentsManager) {
+        window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
+            const { player } = window.getState().player;
+            if (!player) {
+                const loginLink = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
+                const profileLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
+                if (profileLink) {
+                    profileLink.innerHTML = loginLink;
+                }
+                return;
+            }
 
-        if (!player) return;
+            const userAvatar = `
+                <a href="/profile" style="text-decoration: none;" class="user-avatar-link">
+                    <div class="user-avatar-container" style="border-radius: 50%; width: 38px; height: 38px">
+                        <img class="user-avatar-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" src="${player.avatar}" alt="User Avatar" />
+                    </div>
+                </a>
+            `;
 
-        const userAvatar = `
-            <a href="/profile" style="text-decoration: none;" class="user-avatar-link">
-                <div class="user-avatar-container" style="border-radius: 50%; width: 38px; height: 38px">
-                    <img class="user-avatar-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" src="${player.avatar}" alt="User Avatar" />
-                </div>
-            </a>
-        `;
+            const userName = player.username;
+            const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
 
-        const userName = player.username; // Используем поле username
-        const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
+            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
+            if (profileLink) {
+                profileLink.insertAdjacentHTML('beforebegin', userAvatar);
+                profileLink.insertAdjacentHTML('beforebegin', profileName);
+            }
+        });
 
-        const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
-
-        profileLink.insertAdjacentHTML('beforebegin', userAvatar);
-        profileLink.insertAdjacentHTML('beforebegin', profileName);
-    });
-
-    window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
-        const { player } = window.getState().player;
-        if (player) return;
-
-        const loginLink = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
-        const profileLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
-
-        profileLink.innerHTML = loginLink;
-    });
-
-    // Теперь добавляем footer после загрузки компонентов
-    window.componentsManager.addListener('SHOP_PAGE', 'DID_MOUNT', () => {
-        // Создание нового элемента footer
-        const footer = document.createElement('footer');
-        footer.setAttribute('data-v-5b1745d7', '');
-        footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
-
-        footer.innerHTML = `
-            <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
-                <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
-            </figure>
-            <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
-                <span data-v-5b1745d7=""> 2024 WARTUNE</span>
-                <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
-                <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
-                <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
-            </div>
-            <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
-            <div data-v-5b1745d7="">
-                <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
-                <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
-                    <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
-                    <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
-                    <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
-                    <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
-					<a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
-                </div>
-					<p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
-            				<p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD
-SUITE C, LEVEL 7, WORLD TRUST TOWER,
-50 STANLEY STREET, CENTRAL, HONG KONG</p>
-	    </div>
-        `;
-
-        // Вставка нового footer в нужное место на странице
-        const footerContainer = document.querySelector('.boxFooter');
-        if (footerContainer) {
-            footerContainer.appendChild(footer);
-        }
-    });
-
-    window.componentsManager.load();
+        window.componentsManager.load();
+    }
 }
 
+
 function injectScriptAndUse() {
+    if (window.customScriptLoaded) {
+        main();
+        return;
+    }
+
     var head = document.getElementsByTagName("head")[0];
     var script = document.createElement("script");
 
     script.src = "https://cdn.jsdelivr.net/gh/nnetadon/custom391/index-v2.1.4.js";
     script.onload = function() {
-        main();
+        window.customScriptLoaded = true;
+        if (document.readyState === 'complete') {
+            main();
+        } else {
+            window.addEventListener('load', main);
+        }
+        
+        // Добавляем слушатель для обновления компонентов
+        window.addEventListener('componentsUpdate', main);
     };
 
     head.appendChild(script);
 }
 
-injectScriptAndUse();
-
+// Запускаем инициализацию
+if (document.readyState === 'complete') {
+    injectScriptAndUse();
+} else {
+    window.addEventListener('load', injectScriptAndUse);
+}
 /* DISCORD */
 
 const profileSection = document.querySelector('.ProfileContent');
