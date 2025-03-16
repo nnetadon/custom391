@@ -159,39 +159,43 @@ let currentImage = null;
 
 // Слайдер и авторизация
 function paynowMain() {
-    window.dispatchEvent(new CustomEvent("initState"));
-    window.dispatchEvent(new CustomEvent("initComponentsManager"));
-    window.dispatchEvent(new CustomEvent("initToastManager"));
+    if (!window.componentsManager) {
+        setTimeout(paynowMain, 100); // Ждем инициализации componentsManager
+        return;
+    }
 
+    // Добавляем слушатель для модального окна пополнения
     window.componentsManager.addListener('BALANCE_MODAL', 'DID_UPDATE', updateTopUpModal);
-
-    window.componentsManager.load();
 }
 
 function main() {
-    // Инициализируем все необходимые события
+    // Инициализируем базовые события
     window.dispatchEvent(new CustomEvent("initState"));
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
     window.dispatchEvent(new CustomEvent("initToastManager"));
 
-    // Проверяем готовность приложения и вызываем paynowMain
-    if (window.isAppReady) {
-        paynowMain();
-    } else {
-        window.addEventListener('appReady', () => {
-            paynowMain();
-        });
-    }
+    // Функция для обработки профиля
+    function handleProfile() {
+        if (!window.componentsManager) {
+            setTimeout(handleProfile, 100);
+            return;
+        }
 
-    // Добавляем слушатели для компонентов
-    if (window.componentsManager) {
         window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
-            const { player } = window.getState().player;
+            if (!window.getState) return;
+            const state = window.getState();
+            if (!state || !state.player) return;
+            
+            const { player } = state.player;
+            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
+            
+            if (!profileLink) return;
+
             if (!player) {
                 const loginLink = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
-                const profileLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
-                if (profileLink) {
-                    profileLink.innerHTML = loginLink;
+                const loginElement = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
+                if (loginElement) {
+                    loginElement.innerHTML = loginLink;
                 }
                 return;
             }
@@ -207,17 +211,30 @@ function main() {
             const userName = player.username;
             const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
 
-            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
-            if (profileLink) {
-                profileLink.insertAdjacentHTML('beforebegin', userAvatar);
-                profileLink.insertAdjacentHTML('beforebegin', profileName);
-            }
+            profileLink.insertAdjacentHTML('beforebegin', userAvatar);
+            profileLink.insertAdjacentHTML('beforebegin', profileName);
         });
+    }
 
+    // Запускаем обработку профиля
+    handleProfile();
+
+    // Проверяем готовность приложения и запускаем paynowMain
+    if (window.isAppReady) {
+        paynowMain();
+    } else {
+        window.addEventListener('appReady', paynowMain);
+    }
+
+    // Загружаем компоненты после всех инициализаций
+    if (window.componentsManager) {
         window.componentsManager.load();
+    } else {
+        window.addEventListener('componentsManagerReady', () => {
+            window.componentsManager.load();
+        });
     }
 }
-
 
 function injectScriptAndUse() {
     if (window.customScriptLoaded) {
@@ -225,30 +242,22 @@ function injectScriptAndUse() {
         return;
     }
 
-    var head = document.getElementsByTagName("head")[0];
-    var script = document.createElement("script");
-
+    const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/gh/nnetadon/custom391/index-v2.1.4.js";
+    
     script.onload = function() {
         window.customScriptLoaded = true;
-        if (document.readyState === 'complete') {
-            main();
-        } else {
-            window.addEventListener('load', main);
-        }
-        
-        // Добавляем слушатель для обновления компонентов
-        window.addEventListener('componentsUpdate', main);
+        main();
     };
 
-    head.appendChild(script);
+    document.head.appendChild(script);
 }
 
 // Запускаем инициализацию
-if (document.readyState === 'complete') {
-    injectScriptAndUse();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectScriptAndUse);
 } else {
-    window.addEventListener('load', injectScriptAndUse);
+    injectScriptAndUse();
 }
 /* DISCORD */
 
