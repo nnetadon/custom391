@@ -168,73 +168,30 @@ function paynowMain() {
     window.componentsManager.addListener('BALANCE_MODAL', 'DID_UPDATE', updateTopUpModal);
 }
 
-// Функция для добавления футера
-function addFooter() {
-    const footerContainer = document.querySelector('.boxFooter');
-    if (!footerContainer || document.querySelector('footer[data-v-5b1745d7]')) {
-        return; // Если контейнер не найден или футер уже существует, выходим
-    }
-
-    const footer = document.createElement('footer');
-    footer.setAttribute('data-v-5b1745d7', '');
-    footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
-
-    footer.innerHTML = `
-        <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
-            <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
-        </figure>
-        <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
-            <span data-v-5b1745d7=""> 2024 WARTUNE</span>
-            <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
-            <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
-            <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
-        </div>
-        <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
-        <div data-v-5b1745d7="">
-            <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
-            <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
-                <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
-                <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
-                <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
-                <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
-                <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
-            </div>
-            <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
-            <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
-        </div>
-    `;
-
-    footerContainer.appendChild(footer);
-}
-
 function main() {
-    // Инициализируем базовые события
+    // Инициализируем все необходимые события
     window.dispatchEvent(new CustomEvent("initState"));
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
     window.dispatchEvent(new CustomEvent("initToastManager"));
 
-    // Функция для обработки профиля
-    function handleProfile() {
-        if (!window.componentsManager) {
-            setTimeout(handleProfile, 100);
-            return;
-        }
+    // Проверяем готовность приложения и вызываем paynowMain
+    if (window.isAppReady) {
+        paynowMain();
+    } else {
+        window.addEventListener('appReady', () => {
+            paynowMain();
+        });
+    }
 
+    // Добавляем слушатели для компонентов
+    if (window.componentsManager) {
         window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
-            if (!window.getState) return;
-            const state = window.getState();
-            if (!state || !state.player) return;
-            
-            const { player } = state.player;
-            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
-            
-            if (!profileLink) return;
-
+            const { player } = window.getState().player;
             if (!player) {
                 const loginLink = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
-                const loginElement = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
-                if (loginElement) {
-                    loginElement.innerHTML = loginLink;
+                const profileLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
+                if (profileLink) {
+                    profileLink.innerHTML = loginLink;
                 }
                 return;
             }
@@ -250,37 +207,60 @@ function main() {
             const userName = player.username;
             const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
 
+            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
+            if (profileLink) {
                 profileLink.insertAdjacentHTML('beforebegin', userAvatar);
                 profileLink.insertAdjacentHTML('beforebegin', profileName);
+            }
         });
-    }
 
-    // Запускаем обработку профиля
-    handleProfile();
+        // Добавляем слушатель для футера с повторными попытками
+        function addFooter() {
+            const footerContainer = document.querySelector('.boxFooter');
+            if (!footerContainer || document.querySelector('footer[data-v-5b1745d7]')) {
+                return;
+            }
 
-    // Проверяем готовность приложения и запускаем paynowMain
-    if (window.isAppReady) {
-        paynowMain();
-    } else {
-        window.addEventListener('appReady', paynowMain);
-    }
+            const footer = document.createElement('footer');
+            footer.setAttribute('data-v-5b1745d7', '');
+            footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
 
-    // Добавляем слушатели для компонентов
-    if (window.componentsManager) {
-        // Добавляем слушатель для футера с несколькими триггерами
+            footer.innerHTML = `
+                <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
+                    <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
+                </figure>
+                <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
+                    <span data-v-5b1745d7=""> 2024 WARTUNE</span>
+                    <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
+                    <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
+                    <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
+                </div>
+                <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
+                <div data-v-5b1745d7="">
+                    <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
+                    <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
+                        <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
+                        <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
+                        <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
+                        <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
+                        <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
+                    </div>
+                    <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
+                    <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
+                </div>
+            `;
+
+            footerContainer.appendChild(footer);
+        }
+
+        // Несколько попыток добавить футер
         window.componentsManager.addListener('SHOP_PAGE', 'DID_MOUNT', addFooter);
         window.componentsManager.addListener('SHOP_PAGE', 'DID_UPDATE', addFooter);
         
-        // Также пробуем добавить футер через интервал
-        const footerInterval = setInterval(() => {
-            if (document.querySelector('.boxFooter')) {
-                addFooter();
-                clearInterval(footerInterval);
-            }
-        }, 1000);
-
-        // Очистка интервала через 10 секунд если футер так и не добавился
-        setTimeout(() => clearInterval(footerInterval), 10000);
+        // Дополнительные попытки через таймауты
+        setTimeout(addFooter, 1000);
+        setTimeout(addFooter, 2000);
+        setTimeout(addFooter, 5000);
 
         window.componentsManager.load();
     }
@@ -294,7 +274,7 @@ function injectScriptAndUse() {
 
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/gh/nnetadon/custom391/index-v2.1.4.js";
-    
+
     script.onload = function() {
         window.customScriptLoaded = true;
             main();
