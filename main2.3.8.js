@@ -7,11 +7,6 @@ window.sidebarStoreToRight = true; // Добавлен `window.`
   
 window.dispatchEvent(event);
 
-// Конфигурация привилегий и их ID
-const privilegeConfig = {
-    // ... existing privilege config ...
-};
-
 // Функция для расчета бонуса
 const bonusRates = [
     { amount: 500, percent: 0.30 },   // 30% для суммы до 500
