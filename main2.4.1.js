@@ -157,9 +157,8 @@ let currentImage = null;
             }
         }
 
-// Изменяем функцию инициализации
+// Функция инициализации компонентов
 function initializeMainComponents() {
-    // Сначала инициализируем все необходимые события
     window.dispatchEvent(new CustomEvent("initState"));
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
     window.dispatchEvent(new CustomEvent("initToastManager"));
@@ -173,14 +172,19 @@ function initializeMainComponents() {
     window.componentsManager.load();
 }
 
-// Единая точка входа с проверкой готовности
-if (window.isAppReady) {
-    initializeMainComponents();
-} else {
-    window.addEventListener('appReady', () => {
+// Функция для загрузки скрипта и инициализации
+function loadAndInitialize() {
+    if (window.isAppReady) {
         initializeMainComponents();
-    });
+    } else {
+        window.addEventListener('appReady', () => {
+            initializeMainComponents();
+        });
+    }
 }
+
+// Запускаем инициализацию
+loadAndInitialize();
 
 // Функция вставки профиля пользователя
 function insertUserProfile(player, profileLink) {
