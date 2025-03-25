@@ -259,7 +259,12 @@ function main() {
     if (window.isAppReady) {
         initializeMainComponents();
     } else {
-        window.addEventListener('appReady', initializeMainComponents);
+        window.addEventListener('appReady', () => {
+            window.dispatchEvent(new CustomEvent("initState"));
+            window.dispatchEvent(new CustomEvent("initComponentsManager"));
+            window.dispatchEvent(new CustomEvent("initToastManager"));
+            window.componentsManager.load();
+        });
     }
 }
 
