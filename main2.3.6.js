@@ -179,6 +179,31 @@ function initializeMainComponents() {
     window.componentsManager.load();
 }
 
+// Функция вставки профиля пользователя
+function insertUserProfile(player, profileLink) {
+    const userAvatar = `
+        <a href="/profile" style="text-decoration: none;" class="user-avatar-link">
+            <div class="user-avatar-container" style="border-radius: 50%; width: 38px; height: 38px">
+                <img class="user-avatar-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" src="${player.avatar}" alt="User Avatar" />
+            </div>
+        </a>
+    `;
+
+    const userName = player.username;
+    const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
+
+    profileLink.insertAdjacentHTML('beforebegin', userAvatar);
+    profileLink.insertAdjacentHTML('beforebegin', profileName);
+}
+
+// Функция обработки неавторизованного пользователя
+function handleUnauthorizedUser() {
+    const loginLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
+    if (loginLink) {
+        loginLink.innerHTML = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
+    }
+}
+
 // Функция обработки профиля
 function handleProfile(player) {
     const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
@@ -190,6 +215,43 @@ function handleProfile(player) {
     }
 
     insertUserProfile(player, profileLink);
+}
+
+// Функция инициализации футера
+function initializeFooter() {
+    const footer = document.createElement('footer');
+    footer.setAttribute('data-v-5b1745d7', '');
+    footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
+
+    footer.innerHTML = `
+        <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
+            <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
+        </figure>
+        <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
+            <span data-v-5b1745d7=""> 2024 WARTUNE</span>
+            <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
+            <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
+            <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
+        </div>
+        <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
+        <div data-v-5b1745d7="">
+            <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
+            <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
+                <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
+                <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
+                <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
+                <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
+                <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
+            </div>
+            <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
+            <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
+        </div>
+    `;
+
+    const footerContainer = document.querySelector('.boxFooter');
+    if (footerContainer) {
+        footerContainer.appendChild(footer);
+    }
 }
 
 // Основная функция запуска
@@ -752,40 +814,3 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 */
-
-// Функция инициализации футера
-function initializeFooter() {
-    const footer = document.createElement('footer');
-    footer.setAttribute('data-v-5b1745d7', '');
-    footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
-
-    footer.innerHTML = `
-        <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
-            <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
-        </figure>
-        <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
-            <span data-v-5b1745d7=""> 2024 WARTUNE</span>
-            <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
-            <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
-            <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
-        </div>
-        <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
-        <div data-v-5b1745d7="">
-            <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
-            <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
-                <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
-                <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
-                <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
-                <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
-                <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
-            </div>
-            <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
-            <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
-        </div>
-    `;
-
-    const footerContainer = document.querySelector('.boxFooter');
-    if (footerContainer) {
-        footerContainer.appendChild(footer);
-    }
-}
