@@ -157,26 +157,29 @@ let currentImage = null;
             }
         }
 
-// Основная функция инициализации
+// Изменяем функцию инициализации
 function initializeMainComponents() {
+    // Сначала инициализируем все необходимые события
     window.dispatchEvent(new CustomEvent("initState"));
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
     window.dispatchEvent(new CustomEvent("initToastManager"));
 
-    // Обработка профиля
-    window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
-        const state = window.getState();
-        if (!state || !state.player) return;
-        
-        const { player } = state.player;
-        handleProfile(player);
+    // Добавляем слушатель для BALANCE_MODAL до вызова load()
+    window.componentsManager.addListener('BALANCE_MODAL', 'WILL_MOUNT', () => {
+        setTimeout(updateTopUpModal, 0);
     });
 
-    // Обработка футера
-    window.componentsManager.addListener('SHOP_PAGE', 'DID_MOUNT', initializeFooter);
-
-    // Загружаем все компоненты
+    // Загружаем компоненты после добавления всех слушателей
     window.componentsManager.load();
+}
+
+// Единая точка входа с проверкой готовности
+if (window.isAppReady) {
+    initializeMainComponents();
+} else {
+    window.addEventListener('appReady', () => {
+        initializeMainComponents();
+    });
 }
 
 // Функция вставки профиля пользователя
@@ -253,23 +256,6 @@ function initializeFooter() {
         footerContainer.appendChild(footer);
     }
 }
-
-// Основная функция запуска
-function main() {
-    if (window.isAppReady) {
-        initializeMainComponents();
-    } else {
-        window.addEventListener('appReady', () => {
-            window.dispatchEvent(new CustomEvent("initState"));
-            window.dispatchEvent(new CustomEvent("initComponentsManager"));
-            window.dispatchEvent(new CustomEvent("initToastManager"));
-            window.componentsManager.load();
-        });
-    }
-}
-
-// Запускаем приложение
-main();
 
 // Проверяем готовность приложения и запускаем paynowMain
 function paynowMain() {
