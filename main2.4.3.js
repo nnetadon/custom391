@@ -170,12 +170,24 @@ function initializeMainComponents() {
     window.componentsManager.load();
 }
 
-// Проверяем готовность приложения и запускаем инициализацию
-if (window.isAppReady) {
-    initializeMainComponents();
-} else {
-    window.addEventListener('appReady', initializeMainComponents);
-}
+// Немедленно выполняемая функция для инициализации
+(function() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.isAppReady) {
+                initializeMainComponents();
+            } else {
+                window.addEventListener('appReady', initializeMainComponents);
+            }
+        });
+    } else {
+        if (window.isAppReady) {
+            initializeMainComponents();
+        } else {
+            window.addEventListener('appReady', initializeMainComponents);
+        }
+    }
+})();
 
 // Функция вставки профиля пользователя
 function insertUserProfile(player, profileLink) {
