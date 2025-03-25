@@ -170,24 +170,12 @@ function initializeMainComponents() {
     window.componentsManager.load();
 }
 
-// Немедленно выполняемая функция для инициализации
-(function() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.isAppReady) {
-                initializeMainComponents();
-            } else {
-                window.addEventListener('appReady', initializeMainComponents);
-            }
-        });
-    } else {
-        if (window.isAppReady) {
-            initializeMainComponents();
-        } else {
-            window.addEventListener('appReady', initializeMainComponents);
-        }
-    }
-})();
+// Проверяем готовность приложения и запускаем инициализацию
+if (window.isAppReady) {
+    initializeMainComponents();
+} else {
+    window.addEventListener('appReady', initializeMainComponents);
+}
 
 // Функция вставки профиля пользователя
 function insertUserProfile(player, profileLink) {
@@ -274,108 +262,6 @@ function paynowMain() {
     // Добавляем слушатель для модального окна пополнения
     window.componentsManager.addListener('BALANCE_MODAL', 'DID_UPDATE', updateTopUpModal);
 }
-
-function injectScriptAndUse() {
-    if (window.customScriptLoaded) {
-        main();
-        return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/gh/nnetadon/custom391/index-v2.1.4.js";
-    
-    script.onload = function() {
-        window.customScriptLoaded = true;
-        main();
-    };
-
-    document.head.appendChild(script);
-}
-
-// Запускаем инициализацию
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectScriptAndUse);
-} else {
-    injectScriptAndUse();
-}
-/* DISCORD */
-
-const profileSection = document.querySelector('.ProfileContent');
-
-const interval = setInterval(() => {
-    const lang = translateResource[getLang()]; // Получаем текст на текущем языке
-    const profileSectionWrapper = document.querySelector('.ProfileContent-module__wrapper');
-    if (profileSectionWrapper) {
-        clearInterval(interval); // Останавливаем проверку, если элемент найден
-        const newContentHTML = `
-            <a class="tabs__promo_code__telegram" target="_blank" href="https://t.me/wartunerust" rel="noreferrer"><div class="tabs__promo_code__telegram__title"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM13.6277 8.08328C12.7389 7.30557 11.2616 7.30557 10.3728 8.08328C10.0611 8.35604 9.58723 8.32445 9.31447 8.01272C9.04171 7.701 9.0733 7.22717 9.38503 6.95441C10.8394 5.68186 13.1611 5.68186 14.6154 6.95441C16.1285 8.27835 16.1285 10.4717 14.6154 11.7956C14.3588 12.0202 14.0761 12.2041 13.778 12.3484C13.1018 12.6756 12.7502 13.1222 12.7502 13.5V14.25C12.7502 14.6642 12.4144 15 12.0002 15C11.586 15 11.2502 14.6642 11.2502 14.25V13.5C11.2502 12.221 12.3095 11.3926 13.1246 10.9982C13.3073 10.9098 13.4765 10.799 13.6277 10.6667C14.4577 9.9404 14.4577 8.80959 13.6277 8.08328ZM12 18C12.4142 18 12.75 17.6642 12.75 17.25C12.75 16.8358 12.4142 16.5 12 16.5C11.5858 16.5 11.25 16.8358 11.25 17.25C11.25 17.6642 11.5858 18 12 18Z"></path></svg>${lang.tgpromo}</div><div class="tabs__promo_code__telegram__body"><img src="https://gspics.org/images/2024/10/12/IIRpVL.jpg" alt="Dream Rust Avatar"><div class="tabs__promo_code__telegram__body__info"><h4>WARTUNE RUST в Telegram</h4><p>t.me</p></div></div></a>`;
-        
-        profileSectionWrapper.insertAdjacentHTML('beforeend', newContentHTML);
-    }
-}, 1000); // Проверка раз в 1 секунду
-
-
-
-/* Виджет пополнение 10% + контакт админа */
-const eventEndDate = new Date('2025-01-27T23:59:59'); // Конец события
-
-const headerInterval = setInterval(() => {  
-    const lang = translateResource[getLang()]; 
-    const headerContainer = document.querySelector('.container.headerContainer'); 
-
-    if (headerContainer) {
-        clearInterval(headerInterval); // Останавливаем проверку, если элемент найден
-        
-        // Создаем основной контент с вашим текстом и таймером
-        const noticeContainerHTML = `
-            <div class="notice-container">
-                <div class="notice-content">
-                    <p align="center"><big><big>${lang.discount}</big></big></p>
-                    <p align="center">${lang.discount2}</p>
-                    <p align="center" id="timer">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="icon mr-1" width="1em" height="1em" viewBox="0 0 16 16">
-                            <path fill="currentColor" d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012l.354-.354l.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354l-.354.354l-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0"></path>
-                        </svg>
-                        <span id="time-display"></span> <!-- Таймер будет обновлен здесь -->
-                    </p>
-                </div>
-		<img src="https://gspics.org/images/2025/01/29/IVKONh.png" alt="Промокод" style="position: absolute;right: 0;bottom: 0;max-width: 7em;height: auto;z-index: 0;">
-            </div>`;
-
-        headerContainer.insertAdjacentHTML('beforeend', noticeContainerHTML); // Добавляем основной контент
-
-        // Функция для обновления таймера
-        const updateTimer = () => {
-            const now = new Date();
-            const timeRemaining = eventEndDate - now; // Оставшееся время в миллисекундах
-
-            if (timeRemaining <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('timer').innerHTML = `<span>Событие завершилось!</span>`;
-                return;
-            }
-
-            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-            // Форматируем вывод таймера
-            let timeString = '';
-            if (days > 0) {
-                timeString += `${String(days).padStart(2, '0')}д `;
-            }
-            timeString += `${String(hours).padStart(2, '0')}ч:${String(minutes).padStart(2, '0')}м:${String(seconds).padStart(2, '0')}с`;
-
-            // Обновляем содержание таймера
-            document.getElementById('time-display').innerHTML = timeString;
-        };
-
-        // Запускаем обновление таймера каждую секунду
-        const timerInterval = setInterval(updateTimer, 1000);
-        updateTimer(); // Первая инициализация
-    }
-}, 1000); // Проверка раз в 1 секунду
 
 // custom-log
 function checkDomain() {
