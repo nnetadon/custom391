@@ -163,28 +163,19 @@ function initializeMainComponents() {
     window.dispatchEvent(new CustomEvent("initComponentsManager"));
     window.dispatchEvent(new CustomEvent("initToastManager"));
 
-    // Добавляем слушатель для BALANCE_MODAL до вызова load()
     window.componentsManager.addListener('BALANCE_MODAL', 'WILL_MOUNT', () => {
         setTimeout(updateTopUpModal, 0);
     });
 
-    // Загружаем компоненты после добавления всех слушателей
     window.componentsManager.load();
 }
 
-// Функция для загрузки скрипта и инициализации
-function loadAndInitialize() {
-    if (window.isAppReady) {
-        initializeMainComponents();
-    } else {
-        window.addEventListener('appReady', () => {
-            initializeMainComponents();
-        });
-    }
+// Проверяем готовность приложения и запускаем инициализацию
+if (window.isAppReady) {
+    initializeMainComponents();
+} else {
+    window.addEventListener('appReady', initializeMainComponents);
 }
-
-// Запускаем инициализацию
-loadAndInitialize();
 
 // Функция вставки профиля пользователя
 function insertUserProfile(player, profileLink) {
