@@ -6,8 +6,13 @@ window.hideServerSelector = false; // Добавлен `window.`
 window.sidebarStoreToRight = true; // Добавлен `window.`
   
 window.dispatchEvent(event);
+
+// Конфигурация привилегий и их ID
+const privilegeConfig = {
+    // ... existing privilege config ...
+};
+
 // Функция для расчета бонуса
-// Таблица бонусных ставок
 const bonusRates = [
     { amount: 500, percent: 0.30 },   // 30% для суммы до 500
     { amount: 1000, percent: 0.35 }, // 35% для суммы до 1000
