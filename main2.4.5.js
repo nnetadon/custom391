@@ -6,8 +6,8 @@ window.hideServerSelector = false; // Добавлен `window.`
 window.sidebarStoreToRight = true; // Добавлен `window.`
   
 window.dispatchEvent(event);
-
 // Функция для расчета бонуса
+// Таблица бонусных ставок
 const bonusRates = [
     { amount: 500, percent: 0.30 },   // 30% для суммы до 500
     { amount: 1000, percent: 0.35 }, // 35% для суммы до 1000
@@ -157,102 +157,7 @@ let currentImage = null;
             }
         }
 
-// Функция инициализации компонентов
-function initializeMainComponents() {
-    window.dispatchEvent(new CustomEvent("initState"));
-    window.dispatchEvent(new CustomEvent("initComponentsManager"));
-    window.dispatchEvent(new CustomEvent("initToastManager"));
-
-    window.componentsManager.addListener('BALANCE_MODAL', 'WILL_MOUNT', () => {
-        setTimeout(updateTopUpModal, 0);
-    });
-
-    window.componentsManager.load();
-}
-
-// Проверяем готовность приложения и запускаем инициализацию
-if (window.isAppReady) {
-    initializeMainComponents();
-} else {
-    window.addEventListener('appReady', initializeMainComponents);
-}
-
-// Функция вставки профиля пользователя
-function insertUserProfile(player, profileLink) {
-    const userAvatar = `
-        <a href="/profile" style="text-decoration: none;" class="user-avatar-link">
-            <div class="user-avatar-container" style="border-radius: 50%; width: 38px; height: 38px">
-                <img class="user-avatar-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" src="${player.avatar}" alt="User Avatar" />
-            </div>
-        </a>
-    `;
-
-    const userName = player.username;
-    const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
-
-    profileLink.insertAdjacentHTML('beforebegin', userAvatar);
-    profileLink.insertAdjacentHTML('beforebegin', profileName);
-}
-
-// Функция обработки неавторизованного пользователя
-function handleUnauthorizedUser() {
-    const loginLink = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
-    if (loginLink) {
-        loginLink.innerHTML = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
-    }
-}
-
-// Функция обработки профиля
-function handleProfile(player) {
-    const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
-    if (!profileLink) return;
-
-    if (!player) {
-        handleUnauthorizedUser();
-        return;
-    }
-
-    insertUserProfile(player, profileLink);
-}
-
-// Функция инициализации футера
-function initializeFooter() {
-    const footer = document.createElement('footer');
-    footer.setAttribute('data-v-5b1745d7', '');
-    footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
-
-    footer.innerHTML = `
-        <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
-            <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
-        </figure>
-        <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
-            <span data-v-5b1745d7=""> 2024 WARTUNE</span>
-            <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
-            <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
-            <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
-        </div>
-        <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
-        <div data-v-5b1745d7="">
-            <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
-            <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
-                <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
-                <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
-                <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
-                <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
-                <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
-            </div>
-            <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
-            <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
-        </div>
-    `;
-
-    const footerContainer = document.querySelector('.boxFooter');
-    if (footerContainer) {
-        footerContainer.appendChild(footer);
-    }
-}
-
-// Проверяем готовность приложения и запускаем paynowMain
+// Слайдер и авторизация
 function paynowMain() {
     if (!window.componentsManager) {
         setTimeout(paynowMain, 100); // Ждем инициализации componentsManager
@@ -262,6 +167,209 @@ function paynowMain() {
     // Добавляем слушатель для модального окна пополнения
     window.componentsManager.addListener('BALANCE_MODAL', 'DID_UPDATE', updateTopUpModal);
 }
+
+function main() {
+    // Инициализируем базовые события
+    window.dispatchEvent(new CustomEvent("initState"));
+    window.dispatchEvent(new CustomEvent("initComponentsManager"));
+    window.dispatchEvent(new CustomEvent("initToastManager"));
+
+    // Функция для обработки профиля
+    function handleProfile() {
+        if (!window.componentsManager) {
+            setTimeout(handleProfile, 100);
+            return;
+        }
+
+        window.componentsManager.addListener('HEADER', 'DID_MOUNT', () => {
+            if (!window.getState) return;
+            const state = window.getState();
+            if (!state || !state.player) return;
+            
+            const { player } = state.player;
+            const profileLink = document.querySelector('.PlayerMenu-module__profileLink');
+            
+            if (!profileLink) return;
+
+            if (!player) {
+                const loginLink = `<img src="https://gspics.org/images/2024/02/23/0bZN5I.png" alt="Авторизация" style="width: 20px; height: 20px; margin-right: 5px;">Авторизация`;
+                const loginElement = document.querySelector('.PlayerMenu-module__loginLink[href="/api/v1/player.login?login"]');
+                if (loginElement) {
+                    loginElement.innerHTML = loginLink;
+                }
+                return;
+            }
+
+            const userAvatar = `
+                <a href="/profile" style="text-decoration: none;" class="user-avatar-link">
+                    <div class="user-avatar-container" style="border-radius: 50%; width: 38px; height: 38px">
+                        <img class="user-avatar-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" src="${player.avatar}" alt="User Avatar" />
+                    </div>
+                </a>
+            `;
+
+            const userName = player.username;
+            const profileName = `<a href="/profile" style="text-decoration: none;"><div class="ProfileNav-module__name">${userName}</div></a>`;
+
+            profileLink.insertAdjacentHTML('beforebegin', userAvatar);
+            profileLink.insertAdjacentHTML('beforebegin', profileName);
+        });
+    }
+
+    // Запускаем обработку профиля
+    handleProfile();
+
+    // Проверяем готовность приложения и запускаем paynowMain
+    if (window.isAppReady) {
+        paynowMain();
+    } else {
+        window.addEventListener('appReady', paynowMain);
+    }
+
+    // Добавляем слушатели для компонентов
+    if (window.componentsManager) {
+        // Добавляем слушатель для футера
+        window.componentsManager.addListener('SHOP_PAGE', 'DID_MOUNT', () => {
+            const footer = document.createElement('footer');
+            footer.setAttribute('data-v-5b1745d7', '');
+            footer.className = "flex flex-col lg:flex-row justify-center items-center gap-3 pt-4 lg:pt-10 pb-10 overflow-hidden";
+
+            footer.innerHTML = `
+                <figure data-v-15ddda0e="" data-v-5b1745d7="" class="image flex justify-center items-center w-24 h-24 lg:w-36 lg:h-36 -mb-5 lg:mb-0 has-loaded">
+                    <img data-v-15ddda0e="" alt="alt" class="max-w-full max-h-full" src="https://sun9-80.userapi.com/impg/fDr8yu6m0YJVmm0O7KE_wttV7Hu4Pp9yNErV0A/lEejPuxDDsk.jpg?size=512x512&amp;quality=95&amp;sign=123b4440e101dda76acaaa11b36accf8&amp;type=album" style="opacity: 1;">
+                </figure>
+                <div data-v-5b1745d7="" class="font-bold text-sm text-center lg:text-left">
+                    <span data-v-5b1745d7=""> 2024 WARTUNE</span>
+                    <span data-v-5b1745d7="" class="inline-block lg:hidden"> · </span>
+                    <span data-v-5b1745d7="" class="inline-block lg:block mt-2">ALL RIGHTS RESERVED.</span>
+                    <span data-v-5b1745d7="" class="block mt-2 text-xs text-neutral-400 font-thin">SERVED BY #5</span>
+                </div>
+                <div data-v-5b1745d7="" class="hidden lg:block w-px bg-white h-12 mx-12"></div>
+                <div data-v-5b1745d7="">
+                    <p data-v-5b1745d7="" class="hidden lg:block font-bold text-sm">LINKS</p>
+                    <div data-v-5b1745d7="" class="mt-3 flex justify-center flex-wrap gap-10 gap-y-5 text-xs">
+                        <a data-v-5b1745d7="" href="/profile/">Активировать промокод</a>
+                        <a data-v-5b1745d7="" href="/page/ban">Банлист</a>
+                        <a data-v-5b1745d7="" href="/agreement">Пользовательское соглашение</a>
+                        <a data-v-5b1745d7="" href="/privacy">Политика конфиденциальности</a>
+                        <a data-v-5b1745d7="" href="mailto:wartunerust@yandex.ru">wartunerust@yandex.ru</a>
+                    </div>
+                    <p class="ShopFooter-module__text_new">Размещенная на настоящем сайте информация носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями ч. 2 ст. 437 Гражданского кодекса Российской Федерации.</p>
+                    <p class="ShopFooter-module__text_new">MISUTECH LIMITED LTD SUITE C, LEVEL 7, WORLD TRUST TOWER, 50 STANLEY STREET, CENTRAL, HONG KONG</p>
+                </div>
+            `;
+
+            const footerContainer = document.querySelector('.boxFooter');
+            if (footerContainer) {
+                footerContainer.appendChild(footer);
+            }
+        });
+
+        window.componentsManager.load();
+    }
+}
+
+function injectScriptAndUse() {
+    if (window.customScriptLoaded) {
+        main();
+        return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/gh/nnetadon/custom391/index-v2.1.4.js";
+    
+    script.onload = function() {
+        window.customScriptLoaded = true;
+        main();
+    };
+
+    document.head.appendChild(script);
+}
+
+// Запускаем инициализацию
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectScriptAndUse);
+} else {
+    injectScriptAndUse();
+}
+/* DISCORD */
+
+const profileSection = document.querySelector('.ProfileContent');
+
+const interval = setInterval(() => {
+    const lang = translateResource[getLang()]; // Получаем текст на текущем языке
+    const profileSectionWrapper = document.querySelector('.ProfileContent-module__wrapper');
+    if (profileSectionWrapper) {
+        clearInterval(interval); // Останавливаем проверку, если элемент найден
+        const newContentHTML = `
+            <a class="tabs__promo_code__telegram" target="_blank" href="https://t.me/wartunerust" rel="noreferrer"><div class="tabs__promo_code__telegram__title"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM13.6277 8.08328C12.7389 7.30557 11.2616 7.30557 10.3728 8.08328C10.0611 8.35604 9.58723 8.32445 9.31447 8.01272C9.04171 7.701 9.0733 7.22717 9.38503 6.95441C10.8394 5.68186 13.1611 5.68186 14.6154 6.95441C16.1285 8.27835 16.1285 10.4717 14.6154 11.7956C14.3588 12.0202 14.0761 12.2041 13.778 12.3484C13.1018 12.6756 12.7502 13.1222 12.7502 13.5V14.25C12.7502 14.6642 12.4144 15 12.0002 15C11.586 15 11.2502 14.6642 11.2502 14.25V13.5C11.2502 12.221 12.3095 11.3926 13.1246 10.9982C13.3073 10.9098 13.4765 10.799 13.6277 10.6667C14.4577 9.9404 14.4577 8.80959 13.6277 8.08328ZM12 18C12.4142 18 12.75 17.6642 12.75 17.25C12.75 16.8358 12.4142 16.5 12 16.5C11.5858 16.5 11.25 16.8358 11.25 17.25C11.25 17.6642 11.5858 18 12 18Z"></path></svg>${lang.tgpromo}</div><div class="tabs__promo_code__telegram__body"><img src="https://gspics.org/images/2024/10/12/IIRpVL.jpg" alt="Dream Rust Avatar"><div class="tabs__promo_code__telegram__body__info"><h4>WARTUNE RUST в Telegram</h4><p>t.me</p></div></div></a>`;
+        
+        profileSectionWrapper.insertAdjacentHTML('beforeend', newContentHTML);
+    }
+}, 1000); // Проверка раз в 1 секунду
+
+
+
+/* Виджет пополнение 10% + контакт админа */
+const eventEndDate = new Date('2025-01-27T23:59:59'); // Конец события
+
+const headerInterval = setInterval(() => {  
+    const lang = translateResource[getLang()]; 
+    const headerContainer = document.querySelector('.container.headerContainer'); 
+
+    if (headerContainer) {
+        clearInterval(headerInterval); // Останавливаем проверку, если элемент найден
+        
+        // Создаем основной контент с вашим текстом и таймером
+        const noticeContainerHTML = `
+            <div class="notice-container">
+                <div class="notice-content">
+                    <p align="center"><big><big>${lang.discount}</big></big></p>
+                    <p align="center">${lang.discount2}</p>
+                    <p align="center" id="timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="icon mr-1" width="1em" height="1em" viewBox="0 0 16 16">
+                            <path fill="currentColor" d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012l.354-.354l.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354l-.354.354l-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0"></path>
+                        </svg>
+                        <span id="time-display"></span> <!-- Таймер будет обновлен здесь -->
+                    </p>
+                </div>
+		<img src="https://gspics.org/images/2025/01/29/IVKONh.png" alt="Промокод" style="position: absolute;right: 0;bottom: 0;max-width: 7em;height: auto;z-index: 0;">
+            </div>`;
+
+        headerContainer.insertAdjacentHTML('beforeend', noticeContainerHTML); // Добавляем основной контент
+
+        // Функция для обновления таймера
+        const updateTimer = () => {
+            const now = new Date();
+            const timeRemaining = eventEndDate - now; // Оставшееся время в миллисекундах
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').innerHTML = `<span>Событие завершилось!</span>`;
+                return;
+            }
+
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            // Форматируем вывод таймера
+            let timeString = '';
+            if (days > 0) {
+                timeString += `${String(days).padStart(2, '0')}д `;
+            }
+            timeString += `${String(hours).padStart(2, '0')}ч:${String(minutes).padStart(2, '0')}м:${String(seconds).padStart(2, '0')}с`;
+
+            // Обновляем содержание таймера
+            document.getElementById('time-display').innerHTML = timeString;
+        };
+
+        // Запускаем обновление таймера каждую секунду
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Первая инициализация
+    }
+}, 1000); // Проверка раз в 1 секунду
 
 // custom-log
 function checkDomain() {
