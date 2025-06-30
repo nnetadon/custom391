@@ -374,7 +374,7 @@ const headerInterval = setInterval(() => {
 // custom-log
 function checkDomain() {
     const currentDomain = window.location.hostname; // Получаем текущий домен
-    const targetDomain = "wartunerust.ru"; // Целевой домен для проверки
+    const targetDomain = "wartunerust.gamestores.app"; // Целевой домен для проверки
   
     if (currentDomain !== targetDomain) {
         window.location.href = `https://${targetDomain}`; // Редирект на целевой домен
